@@ -58,6 +58,12 @@ class TableRepository(private val database: AppDatabase) {
     suspend fun updateTableStatus(tableId: Int, occupied: Boolean, waiterName: String, colorCode: Int) =
         tableDao.updateTableStatus(tableId, occupied, waiterName, colorCode)
 
+    suspend fun updateTableStatusWithSum(tableId: Int, occupied: Boolean, waiterName: String, colorCode: Int, totalSum: Double) =
+        tableDao.updateTableStatusWithSum(tableId, occupied, waiterName, colorCode, totalSum)
+
+    suspend fun updateTableTotalSum(tableId: Int, totalSum: Double) =
+        tableDao.updateTableTotalSum(tableId, totalSum)
+
     suspend fun updateTableAppearance(tableId: Int, isOval: Boolean, capacity: Int, width: Float, height: Float, chairStyle: Int) =
         tableDao.updateTableAppearance(tableId, isOval, capacity, width, height, chairStyle)
 

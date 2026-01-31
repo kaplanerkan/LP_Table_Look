@@ -53,19 +53,19 @@ class ProgressDialog(context: Context) {
     companion object {
         fun showConnectionTest(context: Context): ProgressDialog {
             return ProgressDialog(context).apply {
-                show("Verbindung wird getestet", "Bitte warten...")
+                show(context.getString(R.string.testing_connection), context.getString(R.string.please_wait))
             }
         }
 
         fun showSync(context: Context): ProgressDialog {
             return ProgressDialog(context).apply {
-                show("Synchronisierung", "Daten werden geladen...")
+                show(context.getString(R.string.synchronization), context.getString(R.string.loading_data))
             }
         }
 
         fun showTableLoading(context: Context, tableName: String): ProgressDialog {
             return ProgressDialog(context).apply {
-                show("Tisch wird geladen", "$tableName - Daten werden abgerufen...")
+                show(context.getString(R.string.loading_table_title), context.getString(R.string.retrieving_data, tableName))
             }
         }
     }

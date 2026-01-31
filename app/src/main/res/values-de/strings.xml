@@ -48,16 +48,12 @@
     <string name="floor_plan_preview">Tischplan Vorschau</string>
     <string name="image_format_info">PNG/JPG, max. 1 MB</string>
     <string name="or_select_style">Oder Stil auswählen</string>
-    <string name="show_chairs">Stühle anzeigen</string>
-    <string name="show_prices">Preise anzeigen</string>
-    <string name="show_currency_symbol">€ Symbol anzeigen</string>
     <string name="settings_saved">Einstellungen gespeichert</string>
     <string name="please_enter_ip">Bitte IP eingeben</string>
     <string name="registering_device">Gerät wird registriert…</string>
     <string name="connection_successful">Verbindung erfolgreich! Gerät registriert.</string>
     <string name="error_prefix">Fehler: %1$s</string>
     <string name="no_wifi_connection">Keine WiFi-Verbindung</string>
-    <string name="connection_failed">Verbindung fehlgeschlagen</string>
     <string name="loading_platforms">Plattformen werden geladen…</string>
     <string name="sync_successful">Synchronisierung erfolgreich!</string>
     <string name="data_updated">Daten wurden aktualisiert</string>
@@ -68,6 +64,8 @@
     <string name="save_error">Fehler beim Speichern</string>
     <string name="floor_plan_removed">Tischplan Hintergrund entfernt</string>
     <string name="background_selected">Hintergrund ausgewählt</string>
+    <string name="show_chairs">Stühle anzeigen</string>
+    <string name="show_prices">Preise anzeigen</string>
 
     <!-- Table -->
     <string name="table">Tisch</string>

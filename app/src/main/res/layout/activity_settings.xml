@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Einstellungen"
+            android:text="@string/settings"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -57,7 +57,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Socket Verbindung"
+                android:text="@string/socket_connection"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
@@ -80,7 +80,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Server IP Adresse"
+                        android:hint="@string/server_ip_address"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginBottom="12dp">
 
@@ -96,7 +96,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Port (fest)"
+                        android:hint="@string/port_fixed"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -132,7 +132,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Automatisch verbinden"
+                            android:text="@string/auto_connect"
                             android:textSize="16sp" />
 
                         <androidx.appcompat.widget.SwitchCompat
@@ -155,7 +155,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Testen"
+                            android:text="@string/test_connection"
                             android:layout_marginEnd="4dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
@@ -164,7 +164,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Sync"
+                            android:text="@string/sync"
                             android:layout_marginStart="4dp" />
 
                     </LinearLayout>
@@ -184,6 +184,37 @@
 
             </LinearLayout>
 
+            <!-- Device ID (under Socket Connection) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:background="@drawable/device_id_background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_id"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tvDeviceId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="@color/turquoise_dark"
+                    android:fontFamily="monospace"
+                    android:ellipsize="middle"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
             <!-- Restaurant Ayarlari -->
             <View
                 android:layout_width="match_parent"
@@ -194,7 +225,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Restaurant"
+                android:text="@string/restaurant"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
@@ -203,7 +234,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Restaurant Name"
+                android:hint="@string/restaurant_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="16dp">
 
@@ -226,7 +257,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Anzeige"
+                android:text="@string/display"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
@@ -235,7 +266,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Standard Tischgröße"
+                android:text="@string/default_table_size"
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
@@ -256,7 +287,82 @@
                 android:textSize="14sp"
                 android:textColor="@color/primary" />
 
-            <!-- Device Info -->
+            <!-- Show Chairs Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/show_chairs"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchShowChairs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/accent"
+                    app:trackTint="@color/primary_light" />
+
+            </LinearLayout>
+
+            <!-- Show Prices Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/show_prices"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchShowPrices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/accent"
+                    app:trackTint="@color/primary_light" />
+
+            </LinearLayout>
+
+            <!-- Show Currency Symbol Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/show_currency_symbol"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchShowCurrencySymbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/accent"
+                    app:trackTint="@color/primary_light" />
+
+            </LinearLayout>
+
+            <!-- Tischplan Background -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -267,7 +373,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gerät"
+                android:text="@string/floor_plan_background"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
@@ -277,29 +383,139 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="12dp"
-                android:background="@drawable/device_id_background">
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Geräte-ID:"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary" />
+                <!-- Image Preview -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="120dp"
+                    android:layout_height="80dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    android:layout_marginEnd="16dp">
 
-                <TextView
-                    android:id="@+id/tvDeviceId"
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/background_floor">
+
+                        <ImageView
+                            android:id="@+id/ivFloorPlanPreview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="Floor Plan Preview" />
+
+                        <TextView
+                            android:id="@+id/tvNoFloorPlan"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/no_image"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                    </FrameLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Buttons -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text=""
-                    android:textSize="12sp"
-                    android:textColor="@color/turquoise_dark"
-                    android:fontFamily="monospace"
-                    android:ellipsize="middle"
-                    android:singleLine="true" />
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSelectFloorPlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_image"
+                        app:icon="@android:drawable/ic_menu_gallery"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRemoveFloorPlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/remove"
+                        android:textColor="@color/table_occupied"
+                        app:icon="@android:drawable/ic_menu_delete"
+                        app:iconTint="@color/table_occupied"
+                        app:strokeColor="@color/table_occupied"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/image_format_info"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="8dp" />
+
+            <!-- Background Style Selection -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/or_select_style"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/btnBgBlue"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/floor_gradient_blue"
+                    android:layout_margin="4dp"
+                    android:contentDescription="Blue"
+                    android:scaleType="centerCrop" />
+
+                <ImageButton
+                    android:id="@+id/btnBgWarm"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/floor_gradient_warm"
+                    android:layout_margin="4dp"
+                    android:contentDescription="Warm"
+                    android:scaleType="centerCrop" />
+
+                <ImageButton
+                    android:id="@+id/btnBgDark"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/floor_gradient_dark"
+                    android:layout_margin="4dp"
+                    android:contentDescription="Dark"
+                    android:scaleType="centerCrop" />
+
+                <ImageButton
+                    android:id="@+id/btnBgGreen"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/floor_gradient_green"
+                    android:layout_margin="4dp"
+                    android:contentDescription="Green"
+                    android:scaleType="centerCrop" />
+
+                <ImageButton
+                    android:id="@+id/btnBgPurple"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/floor_gradient_purple"
+                    android:layout_margin="4dp"
+                    android:contentDescription="Purple"
+                    android:scaleType="centerCrop" />
 
             </LinearLayout>
 

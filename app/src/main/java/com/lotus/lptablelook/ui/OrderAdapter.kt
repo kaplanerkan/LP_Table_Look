@@ -41,7 +41,7 @@ class OrderAdapter(
         // Handle click
         holder.itemView.setOnClickListener {
             val previousSelected = selectedPosition
-            selectedPosition = holder.adapterPosition
+            selectedPosition = holder.bindingAdapterPosition
 
             // Update previous and current items
             if (previousSelected != RecyclerView.NO_POSITION) {
@@ -50,7 +50,7 @@ class OrderAdapter(
             notifyItemChanged(selectedPosition)
 
             // Invoke callback
-            onItemClick?.invoke(order, holder.adapterPosition)
+            onItemClick?.invoke(order, holder.bindingAdapterPosition)
         }
     }
 

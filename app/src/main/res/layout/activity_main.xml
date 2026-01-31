@@ -128,6 +128,32 @@
                 android:src="@drawable/ic_wifi_4"
                 android:contentDescription="WiFi Status" />
 
+            <!-- Battery Status -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="8dp">
+
+                <ImageView
+                    android:id="@+id/ivBatteryStatus"
+                    android:layout_width="@dimen/wifi_icon_size"
+                    android:layout_height="@dimen/wifi_icon_size"
+                    android:src="@drawable/ic_battery_full"
+                    android:contentDescription="Battery Status" />
+
+                <TextView
+                    android:id="@+id/tvBatteryPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_marginStart="2dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

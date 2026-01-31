@@ -147,9 +147,12 @@ class SyncService(
     /**
      * Parse CMD 28 response and UPDATE only status fields of existing tables
      * Does NOT create new tables - tables should already exist from CMD 39
+     * Also fetches totalSum for occupied tables
      */
     private suspend fun parseFullTablesAndUpdate(data: String, platformId: Int = 0) {
+        Log.d(TAG, "parseFullTablesAndUpdate called with data length: ${data.length}, platformId: $platformId")
         if (data.isEmpty() || data == SocketService.RETURN_FAULT) {
+            Log.w(TAG, "parseFullTablesAndUpdate: Empty or fault data, returning")
             return
         }
 
@@ -169,14 +172,61 @@ class SyncService(
                     val colorCode = if (fields.size > 5) fields[5].toIntOrNull() ?: 0 else 0
 
                     val isOccupied = kid > 0
+                    Log.d(TAG, "Processing table $tableId: kid=$kid, isOccupied=$isOccupied, waiter=$waiterName, color=$colorCode")
 
-                    // Only UPDATE status of existing table (don't create new tables)
-                    repository.updateTableStatus(tableId, isOccupied, waiterName, colorCode)
+                    // Fetch totalSum for occupied tables
+                    var totalSum = 0.0
+                    if (isOccupied) {
+                        Log.d(TAG, "Table $tableId is occupied, fetching totalSum...")
+                        val sumResult = fetchTableSum(tableId)
+                        totalSum = sumResult.getOrElse { 0.0 }
+                        Log.d(TAG, "Fetched sum for table $tableId: $totalSum")
+                    }
 
-                    Log.d(TAG, "Updated table $tableId: occupied=$isOccupied, waiter=$waiterName, color=$colorCode")
+                    // Update table status with sum
+                    Log.d(TAG, "Updating table $tableId in database with totalSum=$totalSum")
+                    repository.updateTableStatusWithSum(tableId, isOccupied, waiterName, colorCode, totalSum)
+
+                    Log.d(TAG, "Updated table $tableId: occupied=$isOccupied, waiter=$waiterName, color=$colorCode, sum=$totalSum")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error parsing table record: $record", e)
+            }
+        }
+    }
+
+    /**
+     * Fetch table sum by getting orders and calculating total (internal use during sync)
+     * CMD 27 doesn't return sum directly, so we use CMD 32 to get orders and calculate
+     */
+    private suspend fun fetchTableSum(tableId: Int): Result<Double> {
+        val socket = socketService ?: run {
+            Log.e(TAG, "fetchTableSum: Socket not initialized for table $tableId")
+            return Result.failure(Exception("Socket nicht initialisiert"))
+        }
+
+        val deviceId = getDeviceId()
+        // Use CMD 32 to get table orders
+        val message = ServerCommand.CMD_GET_TABLE_ORDERS.toMessage(deviceId, tableId.toString())
+        Log.d(TAG, "fetchTableSum: Requesting orders for table $tableId to calculate sum, message: $message")
+
+        return when (val result = socket.sendMessage(message)) {
+            is SocketService.SocketResult.Success -> {
+                Log.d(TAG, "fetchTableSum: Got orders response for table $tableId, length: ${result.data.length}")
+                try {
+                    // Parse orders and calculate sum
+                    val orders = parseTableOrders(result.data)
+                    val totalSum = orders.sumOf { it.total - it.discount }
+                    Log.d(TAG, "fetchTableSum: Calculated sum for table $tableId: $totalSum (${orders.size} orders)")
+                    Result.success(totalSum)
+                } catch (e: Exception) {
+                    Log.e(TAG, "fetchTableSum: Parse error for table $tableId: ${e.message}")
+                    Result.success(0.0)
+                }
+            }
+            is SocketService.SocketResult.Error -> {
+                Log.e(TAG, "fetchTableSum: Error for table $tableId: ${result.message}")
+                Result.success(0.0) // Return 0 on error to not break sync
             }
         }
     }
@@ -451,7 +501,8 @@ class SyncService(
     }
 
     /**
-     * Get table sum from server (Command 27)
+     * Get table sum by calculating from orders (Command 32)
+     * CMD 27 doesn't return sum directly, so we calculate from order items
      */
     suspend fun getTableSum(tableId: Int): Result<Double> = withContext(Dispatchers.IO) {
         if (!NetworkUtils.isWifiConnected(context)) {
@@ -460,23 +511,21 @@ class SyncService(
 
         val socket = socketService ?: return@withContext Result.failure(Exception("Socket nicht initialisiert"))
 
-        val message = ServerCommand.CMD_GET_TABLE_SUM.toMessage(tableId.toString())
-        Log.d(TAG, "Requesting table sum: $message")
+        val deviceId = getDeviceId()
+        // Use CMD 32 to get orders and calculate sum
+        val message = ServerCommand.CMD_GET_TABLE_ORDERS.toMessage(deviceId, tableId.toString())
+        Log.d(TAG, "Requesting table orders to calculate sum: $message")
 
         when (val result = socket.sendMessage(message)) {
             is SocketService.SocketResult.Success -> {
-                Log.d(TAG, "Table sum raw response: '${result.data}'")
+                Log.d(TAG, "Table orders response length: ${result.data.length}")
                 try {
-                    val cleanedData = result.data
-                        .replace(SocketService.DATA_FINISH, "")
-                        .replace(",", ".")
-                        .trim()
-                    Log.d(TAG, "Table sum cleaned: '$cleanedData'")
-                    val sum = cleanedData.toDoubleOrNull() ?: 0.0
-                    Log.d(TAG, "Table sum parsed: $sum")
-                    Result.success(sum)
+                    val orders = parseTableOrders(result.data)
+                    val totalSum = orders.sumOf { it.total - it.discount }
+                    Log.d(TAG, "Calculated table sum: $totalSum (${orders.size} orders)")
+                    Result.success(totalSum)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Table sum parse error: ${e.message}")
+                    Log.e(TAG, "Table sum calculation error: ${e.message}")
                     Result.success(0.0)
                 }
             }

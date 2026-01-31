@@ -44,12 +44,12 @@ class TableDetailsDialog(
         val headerLayout = view.findViewById<LinearLayout>(R.id.headerLayout)
 
         // Set table name
-        val displayName = if (table.name.isNotEmpty()) table.name else "Tisch ${table.number}"
+        val displayName = if (table.name.isNotEmpty()) table.name else context.getString(R.string.table_number, table.number)
         tvTableName.text = displayName
 
         // Set status and header color based on colorCode
         if (table.isOccupied) {
-            tvStatus.text = "Besetzt"
+            tvStatus.text = context.getString(R.string.table_occupied)
             val statusColor = when (table.colorCode) {
                 1 -> context.getColor(R.color.table_occupied_orange)
                 2 -> context.getColor(R.color.table_occupied_blue)
@@ -57,7 +57,7 @@ class TableDetailsDialog(
             }
             tvStatus.setTextColor(statusColor)
             headerLayout.setBackgroundColor(statusColor)
-            btnToggleStatus.text = "Als frei markieren"
+            btnToggleStatus.text = context.getString(R.string.mark_as_available)
 
             // Show waiter name if available
             if (table.waiterName.isNotEmpty()) {
@@ -65,18 +65,18 @@ class TableDetailsDialog(
                 tvWaiter.text = table.waiterName
             }
         } else {
-            tvStatus.text = "Frei"
+            tvStatus.text = context.getString(R.string.table_available)
             tvStatus.setTextColor(context.getColor(R.color.table_available))
             headerLayout.setBackgroundColor(context.getColor(R.color.table_available))
-            btnToggleStatus.text = "Als besetzt markieren"
+            btnToggleStatus.text = context.getString(R.string.mark_as_occupied)
             waiterRow.visibility = View.GONE
         }
 
         // Set capacity
-        tvCapacity.text = "${table.capacity} Personen"
+        tvCapacity.text = context.getString(R.string.capacity_persons, table.capacity)
 
         // Set platform
-        tvPlatform.text = platformName.ifEmpty { "Bereich ${table.platformId}" }
+        tvPlatform.text = platformName.ifEmpty { context.getString(R.string.area_number, table.platformId) }
 
         // Close button
         btnClose.setOnClickListener {

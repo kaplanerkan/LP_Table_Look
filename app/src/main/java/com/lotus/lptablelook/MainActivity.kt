@@ -1,9 +1,9 @@
 package com.lotus.lptablelook
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.BatteryManager
 import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.Network
@@ -35,6 +35,8 @@ import com.lotus.lptablelook.ui.PopupMessage
 import com.lotus.lptablelook.ui.ProgressDialog
 import com.lotus.lptablelook.ui.TableDetailsDialog
 import com.lotus.lptablelook.ui.TableOrdersDialog
+import com.lotus.lptablelook.ui.WifiInfoDialog
+import com.lotus.lptablelook.ui.BatteryInfoDialog
 import com.lotus.lptablelook.view.TableFloorView
 import kotlinx.coroutines.launch
 
@@ -49,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSettings: ImageButton
     private lateinit var btnRefresh: ImageButton
     private lateinit var ivWifiStatus: ImageView
+    private lateinit var ivBatteryStatus: ImageView
+    private lateinit var tvBatteryPercent: TextView
 
     private lateinit var repository: TableRepository
     private lateinit var syncService: SyncService
@@ -78,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         loadData()
         loadSettings()
         setupWifiMonitor()
+        setupBatteryMonitor()
     }
 
     private fun enableFullScreen() {
@@ -117,11 +122,11 @@ class MainActivity : AppCompatActivity() {
     private fun updateWifiStatus() {
         val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val isWifiEnabled = wifiManager.isWifiEnabled
-        val wifiInfo = wifiManager.connectionInfo
-        val rssi = wifiInfo?.rssi ?: -100
-        val signalLevel = WifiManager.calculateSignalLevel(rssi, 5) // 0-4 levels
 
         if (isWifiEnabled && isWifiConnected()) {
+            // Get signal strength using new API (Android 11+)
+            val signalLevel = getWifiSignalLevel()
+
             // WiFi connected - show signal strength with appropriate icon and color
             val (iconRes, color) = when (signalLevel) {
                 4 -> Pair(R.drawable.ic_wifi_4, getColor(R.color.table_available))
@@ -139,16 +144,89 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getWifiSignalLevel(): Int {
+        val network = connectivityManager.activeNetwork ?: return 0
+        val caps = connectivityManager.getNetworkCapabilities(network) ?: return 0
+
+        if (!caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return 0
+
+        // Use signalStrength from NetworkCapabilities (returns value from 0-100 or RSSI)
+        val signalStrength = caps.signalStrength
+
+        // Convert signal strength to 0-4 levels
+        // signalStrength is typically RSSI value (-100 to 0 dBm) or 0-100 percentage
+        return when {
+            signalStrength >= -50 || signalStrength >= 80 -> 4  // Excellent
+            signalStrength >= -60 || signalStrength >= 60 -> 3  // Good
+            signalStrength >= -70 || signalStrength >= 40 -> 2  // Fair
+            signalStrength >= -80 || signalStrength >= 20 -> 1  // Weak
+            else -> 0  // Very weak
+        }
+    }
+
     private fun isWifiConnected(): Boolean {
         val network = connectivityManager.activeNetwork ?: return false
         val caps = connectivityManager.getNetworkCapabilities(network) ?: return false
         return caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
 
+    private fun setupBatteryMonitor() {
+        // Get initial battery status
+        updateBatteryStatus()
+
+        // Register battery changed receiver
+        val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryReceiver, batteryFilter)
+    }
+
+    private val batteryReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let { updateBatteryStatus(it) }
+        }
+    }
+
+    private fun updateBatteryStatus(intent: Intent? = null) {
+        val batteryIntent = intent ?: IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
+            registerReceiver(null, filter)
+        }
+
+        batteryIntent?.let {
+            val level = it.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            val batteryPct = if (level >= 0 && scale > 0) (level * 100 / scale) else 0
+
+            val status = it.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
+
+            // Update percentage text
+            tvBatteryPercent.text = "$batteryPct%"
+
+            // Choose icon and color based on charging status and level
+            val (iconRes, color) = when {
+                isCharging -> Pair(R.drawable.ic_battery_charging, getColor(R.color.table_available))
+                batteryPct >= 80 -> Pair(R.drawable.ic_battery_full, getColor(R.color.table_available))
+                batteryPct >= 50 -> Pair(R.drawable.ic_battery_80, getColor(R.color.table_available))
+                batteryPct >= 20 -> Pair(R.drawable.ic_battery_50, getColor(R.color.table_occupied_orange))
+                batteryPct >= 10 -> Pair(R.drawable.ic_battery_20, getColor(R.color.table_occupied_orange))
+                else -> Pair(R.drawable.ic_battery_alert, getColor(R.color.table_occupied))
+            }
+
+            ivBatteryStatus.setImageResource(iconRes)
+            ivBatteryStatus.setColorFilter(color)
+            tvBatteryPercent.setTextColor(color)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         networkCallback?.let {
             connectivityManager.unregisterNetworkCallback(it)
+        }
+        try {
+            unregisterReceiver(batteryReceiver)
+        } catch (e: Exception) {
+            // Receiver might not be registered
         }
     }
 
@@ -162,6 +240,14 @@ class MainActivity : AppCompatActivity() {
                 if (currentSocketIp.isNotEmpty()) {
                     syncService.initialize(currentSocketIp, FIXED_PORT)
                 }
+                // Set background style
+                tableFloorView.setBackgroundStyle(it.backgroundStyle)
+                // Set show chairs setting
+                tableFloorView.setShowChairs(it.showChairs)
+                // Set show prices setting
+                tableFloorView.setShowPrices(it.showPrices)
+                // Set show currency symbol setting
+                tableFloorView.setShowCurrencySymbol(it.showCurrencySymbol)
             }
         }
     }
@@ -170,6 +256,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         // Reload settings when returning from SettingsActivity
         loadSettings()
+        // Reload floor plan background (may have changed in Settings)
+        tableFloorView.loadBackgroundImage()
     }
 
     private fun refreshTableStatuses() {
@@ -186,7 +274,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (currentSocketIp.isEmpty()) {
-                PopupMessage.warning(this@MainActivity, "Bitte zuerst Server IP konfigurieren").show()
+                PopupMessage.warning(this@MainActivity, getString(R.string.configure_server_first)).show()
                 return@launch
             }
 
@@ -198,7 +286,7 @@ class MainActivity : AppCompatActivity() {
         if (currentSocketIp.isEmpty()) return
 
         val progressDialog = ProgressDialog(this).apply {
-            show("Aktualisierung", "Tischstatus wird abgerufen...")
+            show(getString(R.string.updating), getString(R.string.retrieving_table_status))
         }
 
         lifecycleScope.launch {
@@ -210,19 +298,26 @@ class MainActivity : AppCompatActivity() {
                     // Reload tables for current platform
                     currentPlatform?.let { platform ->
                         val tables = repository.getTablesByPlatformSync(platform.id)
+                        android.util.Log.d("MainActivity", "Reloaded ${tables.size} tables after sync")
+                        tables.filter { it.isOccupied }.forEach {
+                            android.util.Log.d("MainActivity", "  Table ${it.name}: totalSum=${it.totalSum}")
+                        }
                         platform.tables.clear()
                         platform.tables.addAll(tables)
-                        tableFloorView.setTables(platform.tables)
+                        runOnUiThread {
+                            tableFloorView.setTables(platform.tables)
+                            tableFloorView.invalidate()
+                        }
                     }
-                    PopupMessage.success(this@MainActivity, "Tischstatus aktualisiert").show()
+                    PopupMessage.success(this@MainActivity, getString(R.string.table_status_updated)).show()
                 }
                 is SyncService.SyncResult.Error -> {
                     progressDialog.dismiss()
-                    PopupMessage.error(this@MainActivity, "Fehler: ${result.message}").show()
+                    PopupMessage.error(this@MainActivity, getString(R.string.error_prefix, result.message)).show()
                 }
                 is SyncService.SyncResult.NoConnection -> {
                     progressDialog.dismiss()
-                    PopupMessage.error(this@MainActivity, "Keine WiFi-Verbindung").show()
+                    PopupMessage.error(this@MainActivity, getString(R.string.no_wifi_connection)).show()
                 }
             }
         }
@@ -238,6 +333,11 @@ class MainActivity : AppCompatActivity() {
         btnSettings = findViewById(R.id.btnSettings)
         btnRefresh = findViewById(R.id.btnRefresh)
         ivWifiStatus = findViewById(R.id.ivWifiStatus)
+        ivBatteryStatus = findViewById(R.id.ivBatteryStatus)
+        tvBatteryPercent = findViewById(R.id.tvBatteryPercent)
+
+        // Load floor plan background image
+        tableFloorView.loadBackgroundImage()
     }
 
     private fun loadData() {
@@ -276,7 +376,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createTabView(platform: Platform): TextView {
-        val tabTextSize = resources.getDimension(R.dimen.platform_tab_text_size) / resources.displayMetrics.scaledDensity
+        val tabTextSize = resources.getDimension(R.dimen.platform_tab_text_size) / (resources.displayMetrics.density * resources.configuration.fontScale)
         val tabPaddingH = resources.getDimensionPixelSize(R.dimen.platform_tab_padding_horizontal)
         val tabPaddingV = resources.getDimensionPixelSize(R.dimen.platform_tab_padding_vertical)
 
@@ -337,6 +437,18 @@ class MainActivity : AppCompatActivity() {
             refreshTableStatuses()
         }
 
+        ivWifiStatus.setOnClickListener {
+            WifiInfoDialog(this).show()
+        }
+
+        ivBatteryStatus.setOnClickListener {
+            BatteryInfoDialog(this).show()
+        }
+
+        tvBatteryPercent.setOnClickListener {
+            BatteryInfoDialog(this).show()
+        }
+
         switchEditMode.setOnCheckedChangeListener { _, isChecked ->
             tableFloorView.setEditMode(isChecked)
             editModeBanner.visibility = if (isChecked) View.VISIBLE else View.GONE
@@ -394,7 +506,7 @@ class MainActivity : AppCompatActivity() {
                 repository.updateTableAppearance(table.id, isOval, capacity, width, height, chairStyle)
             }
 
-            PopupMessage.success(this, "Tisch wurde aktualisiert").show()
+            PopupMessage.success(this, getString(R.string.table_updated)).show()
         }.show()
     }
 
@@ -418,7 +530,7 @@ class MainActivity : AppCompatActivity() {
 
                 PopupMessage.info(
                     this,
-                    if (clickedTable.isOccupied) "Tisch als besetzt markiert" else "Tisch als frei markiert"
+                    getString(if (clickedTable.isOccupied) R.string.table_marked_occupied else R.string.table_marked_available)
                 ).show()
             }
             .setOnDetailsListener { clickedTable ->
@@ -429,13 +541,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTableOrders(table: com.lotus.lptablelook.model.Table) {
         if (currentSocketIp.isEmpty()) {
-            PopupMessage.warning(this, "Bitte zuerst Server IP konfigurieren").show()
+            PopupMessage.warning(this, getString(R.string.configure_server_first)).show()
             return
         }
 
-        val tableName = if (table.name.isNotEmpty()) table.name else "Tisch ${table.number}"
+        val tableName = if (table.name.isNotEmpty()) table.name else getString(R.string.table_number, table.number)
         val progressDialog = ProgressDialog(this).apply {
-            show("Verbindung prüfen", "Kasse wird kontaktiert...")
+            show(getString(R.string.checking_connection), getString(R.string.contacting_register))
         }
 
         lifecycleScope.launch {
@@ -445,17 +557,17 @@ class MainActivity : AppCompatActivity() {
             when (connectionResult) {
                 is SyncService.SyncResult.NoConnection -> {
                     progressDialog.dismiss()
-                    PopupMessage.error(this@MainActivity, "Keine WLAN-Verbindung vorhanden").show()
+                    PopupMessage.error(this@MainActivity, getString(R.string.no_wifi_available)).show()
                     return@launch
                 }
                 is SyncService.SyncResult.Error -> {
                     progressDialog.dismiss()
-                    PopupMessage.error(this@MainActivity, "Kasse ist derzeit nicht erreichbar").show()
+                    PopupMessage.error(this@MainActivity, getString(R.string.register_not_reachable)).show()
                     return@launch
                 }
                 is SyncService.SyncResult.Success -> {
                     // Connection OK, proceed with loading orders
-                    progressDialog.updateMessage("$tableName wird geladen...")
+                    progressDialog.updateMessage(getString(R.string.loading_table, tableName))
                 }
             }
 
@@ -467,7 +579,7 @@ class MainActivity : AppCompatActivity() {
 
             // Check if orders request failed
             if (ordersResult.isFailure) {
-                PopupMessage.error(this@MainActivity, "Bestellungen konnten nicht geladen werden").show()
+                PopupMessage.error(this@MainActivity, getString(R.string.orders_load_error)).show()
                 return@launch
             }
 

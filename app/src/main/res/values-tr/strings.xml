@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">LP Table Look</string>
+
+    <!-- General -->
+    <string name="edit">Düzenle</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="close">Kapat</string>
+    <string name="back">Geri</string>
+    <string name="delete">Sil</string>
+    <string name="remove">Kaldır</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="ok">Tamam</string>
+    <string name="error">Hata</string>
+    <string name="unknown">Bilinmiyor</string>
+    <string name="not_available">Mevcut değil</string>
+    <string name="please_wait">Lütfen bekleyin…</string>
+    <string name="details">Detaylar</string>
+
+    <!-- Main Activity -->
+    <string name="edit_mode">Düzenle</string>
+    <string name="edit_mode_banner">DÜZENLEME MODU - Masaları sürükleyerek konumlarını ayarlayın</string>
+    <string name="refresh">Yenile</string>
+    <string name="scale_up">Büyüt</string>
+    <string name="scale_down">Küçült</string>
+    <string name="wifi_status">WiFi Durumu</string>
+    <string name="battery_status">Pil Durumu</string>
+
+    <!-- Settings Activity -->
+    <string name="settings">Ayarlar</string>
+    <string name="socket_connection">Soket Bağlantısı</string>
+    <string name="server_ip_address">Sunucu IP Adresi</string>
+    <string name="port_fixed">Port (sabit)</string>
+    <string name="auto_connect">Otomatik bağlan</string>
+    <string name="test_connection">Test Et</string>
+    <string name="sync">Senkronize</string>
+    <string name="device_id">Cihaz Kimliği:</string>
+    <string name="restaurant">Restoran</string>
+    <string name="restaurant_name">Restoran Adı</string>
+    <string name="display">Görünüm</string>
+    <string name="default_table_size">Varsayılan Masa Boyutu</string>
+    <string name="floor_plan_background">Masa Planı Arka Planı</string>
+    <string name="no_image">Resim yok</string>
+    <string name="select_image">Resim seç</string>
+    <string name="floor_plan_preview">Masa Planı Önizleme</string>
+    <string name="image_format_info">PNG/JPG, maks. 1 MB</string>
+    <string name="or_select_style">Veya stil seçin</string>
+    <string name="show_chairs">Sandalyeleri göster</string>
+    <string name="show_prices">Fiyatları göster</string>
+    <string name="settings_saved">Ayarlar kaydedildi</string>
+    <string name="please_enter_ip">Lütfen IP girin</string>
+    <string name="registering_device">Cihaz kaydediliyor…</string>
+    <string name="connection_successful">Bağlantı başarılı! Cihaz kaydedildi.</string>
+    <string name="error_prefix">Hata: %1$s</string>
+    <string name="no_wifi_connection">WiFi bağlantısı yok</string>
+    <string name="loading_platforms">Platformlar yükleniyor…</string>
+    <string name="sync_successful">Senkronizasyon başarılı!</string>
+    <string name="data_updated">Veriler güncellendi</string>
+    <string name="image_read_error">Resim okunamadı</string>
+    <string name="file_too_large">Dosya çok büyük! Maksimum 1 MB izin verilir.</string>
+    <string name="image_load_error">Resim yüklenirken hata oluştu</string>
+    <string name="floor_plan_saved">Masa planı arka planı kaydedildi</string>
+    <string name="save_error">Kaydetme hatası</string>
+    <string name="floor_plan_removed">Masa planı arka planı kaldırıldı</string>
+    <string name="background_selected">Arka plan seçildi</string>
+
+    <!-- Table -->
+    <string name="table">Masa</string>
+    <string name="table_number">Masa %1$d</string>
+    <string name="table_name_with_number">Masa %1$s</string>
+    <string name="table_occupied">Dolu</string>
+    <string name="table_available">Boş</string>
+    <string name="mark_as_available">Boş olarak işaretle</string>
+    <string name="mark_as_occupied">Dolu olarak işaretle</string>
+    <string name="table_marked_occupied">Masa dolu olarak işaretlendi</string>
+    <string name="table_marked_available">Masa boş olarak işaretlendi</string>
+    <string name="table_updated">Masa güncellendi</string>
+    <string name="capacity">Kapasite</string>
+    <string name="capacity_persons">%1$d kişi</string>
+    <string name="area">Bölüm</string>
+    <string name="area_number">Bölüm %1$d</string>
+    <string name="waiter">Garson</string>
+    <string name="change_status">Durumu değiştir</string>
+    <string name="configure_server_first">Lütfen önce sunucu IP adresini yapılandırın</string>
+    <string name="updating">Güncelleniyor</string>
+    <string name="retrieving_table_status">Masa durumu alınıyor…</string>
+    <string name="table_status_updated">Masa durumu güncellendi</string>
+
+    <!-- Edit Table Dialog -->
+    <string name="edit_table">Masayı düzenle</string>
+    <string name="edit_table_title">%1$s düzenle</string>
+    <string name="shape">Şekil</string>
+    <string name="rectangle">Dikdörtgen</string>
+    <string name="oval">Oval</string>
+    <string name="size">Boyut</string>
+    <string name="small">Küçük</string>
+    <string name="medium">Orta</string>
+    <string name="large">Büyük</string>
+    <string name="chair_style">Sandalye Stili</string>
+    <string name="chair_round">Yuvarlak</string>
+    <string name="chair_top">Üst</string>
+    <string name="chair_simple">Basit</string>
+    <string name="chair_person">Kişi</string>
+    <string name="chair_arc">Yay</string>
+
+    <!-- Orders Dialog -->
+    <string name="orders">Siparişler</string>
+    <string name="table_orders">%1$s - Siparişler</string>
+    <string name="no_orders">Sipariş yok</string>
+    <string name="total">Toplam:</string>
+    <string name="total_amount">%1$.2f EUR</string>
+    <string name="orders_load_error">Siparişler yüklenemedi</string>
+    <string name="checking_connection">Bağlantı kontrol ediliyor</string>
+    <string name="contacting_register">Kasa ile iletişim kuruluyor…</string>
+    <string name="no_wifi_available">WiFi bağlantısı mevcut değil</string>
+    <string name="register_not_reachable">Kasa şu anda ulaşılabilir değil</string>
+    <string name="loading_table">%1$s yükleniyor…</string>
+
+    <!-- WiFi Info Dialog -->
+    <string name="wifi_information">WiFi Bilgisi</string>
+    <string name="status">Durum</string>
+    <string name="connected">Bağlı</string>
+    <string name="not_connected">Bağlı değil</string>
+    <string name="wifi_disabled">WiFi devre dışı</string>
+    <string name="network_ssid">Ağ (SSID)</string>
+    <string name="ip_address">IP Adresi</string>
+    <string name="signal_strength">Sinyal Gücü</string>
+    <string name="link_speed">Hız</string>
+    <string name="frequency">Frekans</string>
+    <string name="hidden_network">Gizli</string>
+    <string name="location_permission_required">Konum izni gerekli</string>
+    <string name="signal_format">%1$d%% (%2$d dBm)</string>
+    <string name="speed_format">%1$d Mbps</string>
+    <string name="frequency_format">%1$d MHz (%2$s)</string>
+    <string name="band_5ghz">5 GHz</string>
+    <string name="band_24ghz">2.4 GHz</string>
+
+    <!-- Battery Info Dialog -->
+    <string name="battery_information">Pil Bilgisi</string>
+    <string name="battery_level">Pil Seviyesi</string>
+    <string name="battery_health">Sağlık Durumu</string>
+    <string name="temperature">Sıcaklık</string>
+    <string name="voltage">Voltaj</string>
+    <string name="technology">Teknoloji</string>
+    <string name="charging">Şarj oluyor (%1$s)</string>
+    <string name="charging_ac">AC</string>
+    <string name="charging_usb">USB</string>
+    <string name="charging_wireless">Kablosuz</string>
+    <string name="discharging">Deşarj oluyor</string>
+    <string name="battery_full">Dolu</string>
+    <string name="not_charging">Şarj olmuyor</string>
+    <string name="health_good">İyi</string>
+    <string name="health_overheat">Aşırı ısınmış</string>
+    <string name="health_dead">Arızalı</string>
+    <string name="health_overvoltage">Aşırı voltaj</string>
+    <string name="health_cold">Soğuk</string>
+    <string name="temperature_format">%.1f °C</string>
+    <string name="voltage_format">%.2f V</string>
+    <string name="battery_percent">%1$d%%</string>
+
+    <!-- Progress Dialog -->
+    <string name="testing_connection">Bağlantı test ediliyor</string>
+    <string name="synchronization">Senkronizasyon</string>
+    <string name="loading_data">Veriler yükleniyor…</string>
+    <string name="loading_table_title">Masa yükleniyor</string>
+    <string name="retrieving_data">%1$s - Veriler alınıyor…</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_wifi">WiFi</string>
+    <string name="cd_battery">Pil</string>
+    <string name="cd_edit">Düzenle</string>
+    <string name="cd_table">Masa</string>
+    <string name="cd_waiter">Garson</string>
+    <string name="cd_total">Toplam</string>
+    <string name="cd_plus">Artı</string>
+    <string name="cd_minus">Eksi</string>
+    <string name="cd_blue">Mavi</string>
+    <string name="cd_warm">Sıcak</string>
+    <string name="cd_dark">Koyu</string>
+    <string name="cd_green">Yeşil</string>
+    <string name="cd_purple">Mor</string>
+</resources>

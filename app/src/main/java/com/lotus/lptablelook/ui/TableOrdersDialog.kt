@@ -48,8 +48,8 @@ class TableOrdersDialog(
         val tvWaiterName = view.findViewById<TextView>(R.id.tvWaiterName)
 
         // Set table name
-        val displayName = if (table.name.isNotEmpty()) table.name else "Tisch ${table.number}"
-        tvTableName.text = "$displayName - Bestellungen"
+        val displayName = if (table.name.isNotEmpty()) table.name else context.getString(R.string.table_number, table.number)
+        tvTableName.text = context.getString(R.string.table_orders, displayName)
 
         // Set waiter info (show only if waiter name exists)
         if (table.waiterName.isNotEmpty()) {

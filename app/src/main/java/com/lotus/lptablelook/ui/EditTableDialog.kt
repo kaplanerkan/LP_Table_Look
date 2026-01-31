@@ -96,8 +96,8 @@ class EditTableDialog(
 
     private fun setupData() {
         // Set title
-        val tableName = if (table.name.isNotEmpty()) table.name else "Tisch ${table.number}"
-        tvDialogTitle.text = "$tableName bearbeiten"
+        val tableName = if (table.name.isNotEmpty()) table.name else context.getString(R.string.table_number, table.number)
+        tvDialogTitle.text = context.getString(R.string.edit_table_title, tableName)
 
         // Set current shape
         if (table.isOval) {
@@ -106,8 +106,8 @@ class EditTableDialog(
             rbRectangle.isChecked = true
         }
 
-        // Set current capacity
-        currentCapacity = table.capacity.coerceIn(1, 9)
+        // Set current capacity (0 = no chairs)
+        currentCapacity = table.capacity.coerceIn(0, 9)
         updateCapacityDisplay()
 
         // Set current size
@@ -127,7 +127,7 @@ class EditTableDialog(
         btnCancel.setOnClickListener { dismiss() }
 
         btnCapacityMinus.setOnClickListener {
-            if (currentCapacity > 1) {
+            if (currentCapacity > 0) {
                 currentCapacity--
                 updateCapacityDisplay()
             }

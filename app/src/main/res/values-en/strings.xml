@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">LP Table Look</string>
+
+    <!-- General -->
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="unknown">Unknown</string>
+    <string name="not_available">Not available</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="details">Details</string>
+
+    <!-- Main Activity -->
+    <string name="edit_mode">Edit</string>
+    <string name="edit_mode_banner">EDIT MODE - Drag tables to change position</string>
+    <string name="refresh">Refresh</string>
+    <string name="scale_up">Zoom in</string>
+    <string name="scale_down">Zoom out</string>
+    <string name="wifi_status">WiFi Status</string>
+    <string name="battery_status">Battery Status</string>
+
+    <!-- Settings Activity -->
+    <string name="settings">Settings</string>
+    <string name="socket_connection">Socket Connection</string>
+    <string name="server_ip_address">Server IP Address</string>
+    <string name="port_fixed">Port (fixed)</string>
+    <string name="auto_connect">Auto-connect</string>
+    <string name="test_connection">Test</string>
+    <string name="sync">Sync</string>
+    <string name="device_id">Device ID:</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="display">Display</string>
+    <string name="default_table_size">Default Table Size</string>
+    <string name="floor_plan_background">Floor Plan Background</string>
+    <string name="no_image">No image</string>
+    <string name="select_image">Select image</string>
+    <string name="floor_plan_preview">Floor Plan Preview</string>
+    <string name="image_format_info">PNG/JPG, max. 1 MB</string>
+    <string name="or_select_style">Or select style</string>
+    <string name="show_chairs">Show chairs</string>
+    <string name="show_prices">Show prices</string>
+    <string name="settings_saved">Settings saved</string>
+    <string name="please_enter_ip">Please enter IP</string>
+    <string name="registering_device">Registering device…</string>
+    <string name="connection_successful">Connection successful! Device registered.</string>
+    <string name="error_prefix">Error: %1$s</string>
+    <string name="no_wifi_connection">No WiFi connection</string>
+    <string name="loading_platforms">Loading platforms…</string>
+    <string name="sync_successful">Synchronization successful!</string>
+    <string name="data_updated">Data has been updated</string>
+    <string name="image_read_error">Image could not be read</string>
+    <string name="file_too_large">File is too large! Maximum 1 MB allowed.</string>
+    <string name="image_load_error">Error loading image</string>
+    <string name="floor_plan_saved">Floor plan background saved</string>
+    <string name="save_error">Error saving</string>
+    <string name="floor_plan_removed">Floor plan background removed</string>
+    <string name="background_selected">Background selected</string>
+
+    <!-- Table -->
+    <string name="table">Table</string>
+    <string name="table_number">Table %1$d</string>
+    <string name="table_name_with_number">Table %1$s</string>
+    <string name="table_occupied">Occupied</string>
+    <string name="table_available">Available</string>
+    <string name="mark_as_available">Mark as available</string>
+    <string name="mark_as_occupied">Mark as occupied</string>
+    <string name="table_marked_occupied">Table marked as occupied</string>
+    <string name="table_marked_available">Table marked as available</string>
+    <string name="table_updated">Table has been updated</string>
+    <string name="capacity">Capacity</string>
+    <string name="capacity_persons">%1$d persons</string>
+    <string name="area">Area</string>
+    <string name="area_number">Area %1$d</string>
+    <string name="waiter">Waiter</string>
+    <string name="change_status">Change status</string>
+    <string name="configure_server_first">Please configure server IP first</string>
+    <string name="updating">Updating</string>
+    <string name="retrieving_table_status">Retrieving table status…</string>
+    <string name="table_status_updated">Table status updated</string>
+
+    <!-- Edit Table Dialog -->
+    <string name="edit_table">Edit table</string>
+    <string name="edit_table_title">Edit %1$s</string>
+    <string name="shape">Shape</string>
+    <string name="rectangle">Rectangle</string>
+    <string name="oval">Oval</string>
+    <string name="size">Size</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="chair_style">Chair Style</string>
+    <string name="chair_round">Round</string>
+    <string name="chair_top">Top</string>
+    <string name="chair_simple">Simple</string>
+    <string name="chair_person">Person</string>
+    <string name="chair_arc">Arc</string>
+
+    <!-- Orders Dialog -->
+    <string name="orders">Orders</string>
+    <string name="table_orders">%1$s - Orders</string>
+    <string name="no_orders">No orders</string>
+    <string name="total">Total:</string>
+    <string name="total_amount">%1$.2f EUR</string>
+    <string name="orders_load_error">Orders could not be loaded</string>
+    <string name="checking_connection">Checking connection</string>
+    <string name="contacting_register">Contacting cash register…</string>
+    <string name="no_wifi_available">No WiFi connection available</string>
+    <string name="register_not_reachable">Cash register is currently not reachable</string>
+    <string name="loading_table">Loading %1$s…</string>
+
+    <!-- WiFi Info Dialog -->
+    <string name="wifi_information">WiFi Information</string>
+    <string name="status">Status</string>
+    <string name="connected">Connected</string>
+    <string name="not_connected">Not connected</string>
+    <string name="wifi_disabled">WiFi disabled</string>
+    <string name="network_ssid">Network (SSID)</string>
+    <string name="ip_address">IP Address</string>
+    <string name="signal_strength">Signal Strength</string>
+    <string name="link_speed">Speed</string>
+    <string name="frequency">Frequency</string>
+    <string name="hidden_network">Hidden</string>
+    <string name="location_permission_required">Location permission required</string>
+    <string name="signal_format">%1$d%% (%2$d dBm)</string>
+    <string name="speed_format">%1$d Mbps</string>
+    <string name="frequency_format">%1$d MHz (%2$s)</string>
+    <string name="band_5ghz">5 GHz</string>
+    <string name="band_24ghz">2.4 GHz</string>
+
+    <!-- Battery Info Dialog -->
+    <string name="battery_information">Battery Information</string>
+    <string name="battery_level">Battery Level</string>
+    <string name="battery_health">Health</string>
+    <string name="temperature">Temperature</string>
+    <string name="voltage">Voltage</string>
+    <string name="technology">Technology</string>
+    <string name="charging">Charging (%1$s)</string>
+    <string name="charging_ac">AC</string>
+    <string name="charging_usb">USB</string>
+    <string name="charging_wireless">Wireless</string>
+    <string name="discharging">Discharging</string>
+    <string name="battery_full">Full</string>
+    <string name="not_charging">Not charging</string>
+    <string name="health_good">Good</string>
+    <string name="health_overheat">Overheated</string>
+    <string name="health_dead">Dead</string>
+    <string name="health_overvoltage">Over voltage</string>
+    <string name="health_cold">Cold</string>
+    <string name="temperature_format">%.1f °C</string>
+    <string name="voltage_format">%.2f V</string>
+    <string name="battery_percent">%1$d%%</string>
+
+    <!-- Progress Dialog -->
+    <string name="testing_connection">Testing connection</string>
+    <string name="synchronization">Synchronization</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="loading_table_title">Loading table</string>
+    <string name="retrieving_data">%1$s - Retrieving data…</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_wifi">WiFi</string>
+    <string name="cd_battery">Battery</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_table">Table</string>
+    <string name="cd_waiter">Waiter</string>
+    <string name="cd_total">Total</string>
+    <string name="cd_plus">Plus</string>
+    <string name="cd_minus">Minus</string>
+    <string name="cd_blue">Blue</string>
+    <string name="cd_warm">Warm</string>
+    <string name="cd_dark">Dark</string>
+    <string name="cd_green">Green</string>
+    <string name="cd_purple">Purple</string>
+</resources>
