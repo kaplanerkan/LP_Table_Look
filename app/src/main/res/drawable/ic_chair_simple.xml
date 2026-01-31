@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Basit daire sandalye -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Ana daire -->
+    <path
+        android:fillColor="#6D4C41"
+        android:pathData="M12,3C7.03,3 3,7.03 3,12s4.03,9 9,9 9,-4.03 9,-9S16.97,3 12,3z"/>
+
+    <!-- Parlama efekti -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M12,5C8.13,5 5,8.13 5,12c0,0.5 0.05,1 0.15,1.5C5.05,13 5,12.5 5,12c0,-3.87 3.13,-7 7,-7s7,3.13 7,7c0,0.5 -0.05,1 -0.15,1.5C18.95,13 19,12.5 19,12c0,-3.87 -3.13,-7 -7,-7z"/>
+
+</vector>

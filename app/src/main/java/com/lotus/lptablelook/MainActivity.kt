@@ -378,19 +378,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showEditTableDialog(table: com.lotus.lptablelook.model.Table) {
-        EditTableDialog(this, table) { isOval, capacity, width, height ->
+        EditTableDialog(this, table) { isOval, capacity, width, height, chairStyle ->
             // Update table properties
             table.isOval = isOval
             table.capacity = capacity
             table.width = width
             table.height = height
+            table.chairStyle = chairStyle
 
             // Refresh view
             tableFloorView.invalidate()
 
             // Save to database
             lifecycleScope.launch {
-                repository.updateTableAppearance(table.id, isOval, capacity, width, height)
+                repository.updateTableAppearance(table.id, isOval, capacity, width, height, chairStyle)
             }
 
             PopupMessage.success(this, "Tisch wurde aktualisiert").show()

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Üstten görünüm sandalye -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Oturma yeri (kare, köşeleri yuvarlatılmış) -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M4,6C4,4.9 4.9,4 6,4h12c1.1,0 2,0.9 2,2v12c0,1.1 -0.9,2 -2,2H6c-1.1,0 -2,-0.9 -2,-2V6z"/>
+
+    <!-- Sırtlık -->
+    <path
+        android:fillColor="#5D4037"
+        android:pathData="M5,2h14c0.55,0 1,0.45 1,1v1c0,0.55 -0.45,1 -1,1H5C4.45,5 4,4.55 4,4V3C4,2.45 4.45,2 5,2z"/>
+
+</vector>

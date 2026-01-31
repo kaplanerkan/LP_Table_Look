@@ -154,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 android:paddingVertical="8dp">
 
                 <RadioButton
@@ -186,6 +186,75 @@
                     android:paddingStart="8dp" />
 
             </RadioGroup>
+
+            <!-- Chair Style Selection -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stuhlstil"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/chairStyleContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
+
+                <ImageButton
+                    android:id="@+id/btnChairRound"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_chair_round"
+                    android:background="@drawable/chair_style_selector"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:contentDescription="Rund" />
+
+                <ImageButton
+                    android:id="@+id/btnChairTop"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_chair_top"
+                    android:background="@drawable/chair_style_selector"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:contentDescription="Oben" />
+
+                <ImageButton
+                    android:id="@+id/btnChairSimple"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_chair_simple"
+                    android:background="@drawable/chair_style_selector"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:contentDescription="Einfach" />
+
+                <ImageButton
+                    android:id="@+id/btnChairPerson"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_seat_person"
+                    android:background="@drawable/chair_style_selector"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:contentDescription="Person" />
+
+                <ImageButton
+                    android:id="@+id/btnChairArc"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_chair_arc"
+                    android:background="@drawable/chair_style_selector"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:contentDescription="Bogen" />
+
+            </LinearLayout>
 
             <!-- Divider -->
             <View

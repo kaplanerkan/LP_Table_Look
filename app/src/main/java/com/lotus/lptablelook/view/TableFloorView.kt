@@ -247,40 +247,126 @@ class TableFloorView(
     }
 
     private fun drawChairs(canvas: Canvas, table: Table, tableRect: RectF) {
-        val chairSize = 20f * tableScale
-        val chairOffset = 8f * tableScale
+        val chairSize = 14f * tableScale  // Smaller chairs
+        val chairOffset = 6f * tableScale
+        val capacity = table.capacity.coerceIn(1, 9)
 
-        when (table.capacity) {
-            2 -> {
-                canvas.drawRoundRect(
-                    tableRect.left - chairSize - chairOffset,
-                    tableRect.centerY() - chairSize / 2,
-                    tableRect.left - chairOffset,
-                    tableRect.centerY() + chairSize / 2,
-                    4f, 4f, chairPaint
-                )
-                canvas.drawRoundRect(
-                    tableRect.right + chairOffset,
-                    tableRect.centerY() - chairSize / 2,
-                    tableRect.right + chairSize + chairOffset,
-                    tableRect.centerY() + chairSize / 2,
-                    4f, 4f, chairPaint
-                )
+        // Calculate chair positions around the table
+        val positions = calculateChairPositions(tableRect, capacity, chairSize, chairOffset)
+
+        // Draw each chair based on style
+        for ((cx, cy) in positions) {
+            drawChair(canvas, cx, cy, chairSize, table.chairStyle)
+        }
+    }
+
+    private fun calculateChairPositions(
+        tableRect: RectF,
+        capacity: Int,
+        chairSize: Float,
+        chairOffset: Float
+    ): List<Pair<Float, Float>> {
+        val positions = mutableListOf<Pair<Float, Float>>()
+
+        // Distribution strategy for 1-9 chairs
+        // Top, Bottom, Left, Right sides
+        val topCount: Int
+        val bottomCount: Int
+        val leftCount: Int
+        val rightCount: Int
+
+        when (capacity) {
+            1 -> { topCount = 1; bottomCount = 0; leftCount = 0; rightCount = 0 }
+            2 -> { topCount = 0; bottomCount = 0; leftCount = 1; rightCount = 1 }
+            3 -> { topCount = 1; bottomCount = 1; leftCount = 0; rightCount = 1 }
+            4 -> { topCount = 1; bottomCount = 1; leftCount = 1; rightCount = 1 }
+            5 -> { topCount = 2; bottomCount = 2; leftCount = 0; rightCount = 1 }
+            6 -> { topCount = 2; bottomCount = 2; leftCount = 1; rightCount = 1 }
+            7 -> { topCount = 2; bottomCount = 2; leftCount = 1; rightCount = 2 }
+            8 -> { topCount = 2; bottomCount = 2; leftCount = 2; rightCount = 2 }
+            9 -> { topCount = 3; bottomCount = 3; leftCount = 1; rightCount = 2 }
+            else -> { topCount = 1; bottomCount = 1; leftCount = 1; rightCount = 1 }
+        }
+
+        // Top chairs
+        if (topCount > 0) {
+            val spacing = tableRect.width() / (topCount + 1)
+            for (i in 1..topCount) {
+                val x = tableRect.left + spacing * i - chairSize / 2
+                val y = tableRect.top - chairSize - chairOffset
+                positions.add(Pair(x, y))
             }
-            4 -> {
-                val positions = listOf(
-                    tableRect.centerX() - chairSize / 2 to tableRect.top - chairSize - chairOffset,
-                    tableRect.centerX() - chairSize / 2 to tableRect.bottom + chairOffset,
-                    tableRect.left - chairSize - chairOffset to tableRect.centerY() - chairSize / 2,
-                    tableRect.right + chairOffset to tableRect.centerY() - chairSize / 2
-                )
+        }
 
-                for ((cx, cy) in positions) {
-                    canvas.drawRoundRect(
-                        cx, cy, cx + chairSize, cy + chairSize,
-                        4f, 4f, chairPaint
-                    )
-                }
+        // Bottom chairs
+        if (bottomCount > 0) {
+            val spacing = tableRect.width() / (bottomCount + 1)
+            for (i in 1..bottomCount) {
+                val x = tableRect.left + spacing * i - chairSize / 2
+                val y = tableRect.bottom + chairOffset
+                positions.add(Pair(x, y))
+            }
+        }
+
+        // Left chairs
+        if (leftCount > 0) {
+            val spacing = tableRect.height() / (leftCount + 1)
+            for (i in 1..leftCount) {
+                val x = tableRect.left - chairSize - chairOffset
+                val y = tableRect.top + spacing * i - chairSize / 2
+                positions.add(Pair(x, y))
+            }
+        }
+
+        // Right chairs
+        if (rightCount > 0) {
+            val spacing = tableRect.height() / (rightCount + 1)
+            for (i in 1..rightCount) {
+                val x = tableRect.right + chairOffset
+                val y = tableRect.top + spacing * i - chairSize / 2
+                positions.add(Pair(x, y))
+            }
+        }
+
+        return positions
+    }
+
+    private fun drawChair(canvas: Canvas, x: Float, y: Float, size: Float, style: Int) {
+        val rect = RectF(x, y, x + size, y + size)
+
+        when (style) {
+            0 -> { // Round - filled circle
+                canvas.drawOval(rect, chairPaint)
+            }
+            1 -> { // Top view - square with back
+                val cornerRadius = 3f * tableScale
+                canvas.drawRoundRect(rect, cornerRadius, cornerRadius, chairPaint)
+                // Small back line
+                val backPaint = Paint(chairPaint).apply { color = 0xFF5D4037.toInt() }
+                canvas.drawRect(x, y, x + size, y + size * 0.2f, backPaint)
+            }
+            2 -> { // Simple - filled circle (lighter)
+                val simplePaint = Paint(chairPaint).apply { color = 0xFF8D6E63.toInt() }
+                canvas.drawOval(rect, simplePaint)
+            }
+            3 -> { // Person - circle with head indicator
+                canvas.drawOval(rect, chairPaint)
+                // Small head circle on top
+                val headSize = size * 0.4f
+                val headRect = RectF(
+                    x + size / 2 - headSize / 2,
+                    y - headSize * 0.3f,
+                    x + size / 2 + headSize / 2,
+                    y + headSize * 0.7f
+                )
+                canvas.drawOval(headRect, chairPaint)
+            }
+            4 -> { // Arc - half circle
+                val arcRect = RectF(x, y - size / 2, x + size, y + size / 2)
+                canvas.drawArc(arcRect, 0f, 180f, true, chairPaint)
+            }
+            else -> { // Default round
+                canvas.drawOval(rect, chairPaint)
             }
         }
     }

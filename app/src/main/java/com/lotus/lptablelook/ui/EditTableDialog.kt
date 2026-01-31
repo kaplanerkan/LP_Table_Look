@@ -16,7 +16,7 @@ import com.lotus.lptablelook.model.Table
 class EditTableDialog(
     context: Context,
     private val table: Table,
-    private val onSave: (isOval: Boolean, capacity: Int, width: Float, height: Float) -> Unit
+    private val onSave: (isOval: Boolean, capacity: Int, width: Float, height: Float, chairStyle: Int) -> Unit
 ) : Dialog(context) {
 
     private lateinit var tvDialogTitle: TextView
@@ -34,7 +34,16 @@ class EditTableDialog(
     private lateinit var btnCancel: com.google.android.material.button.MaterialButton
     private lateinit var btnSave: com.google.android.material.button.MaterialButton
 
+    // Chair style buttons
+    private lateinit var btnChairRound: ImageButton
+    private lateinit var btnChairTop: ImageButton
+    private lateinit var btnChairSimple: ImageButton
+    private lateinit var btnChairPerson: ImageButton
+    private lateinit var btnChairArc: ImageButton
+    private lateinit var chairButtons: List<ImageButton>
+
     private var currentCapacity: Int = table.capacity
+    private var currentChairStyle: Int = table.chairStyle
 
     // Size presets (width x height)
     private val sizeSmall = Pair(100f, 80f)
@@ -74,6 +83,15 @@ class EditTableDialog(
         btnClose = findViewById(R.id.btnClose)
         btnCancel = findViewById(R.id.btnCancel)
         btnSave = findViewById(R.id.btnSave)
+
+        // Chair style buttons
+        btnChairRound = findViewById(R.id.btnChairRound)
+        btnChairTop = findViewById(R.id.btnChairTop)
+        btnChairSimple = findViewById(R.id.btnChairSimple)
+        btnChairPerson = findViewById(R.id.btnChairPerson)
+        btnChairArc = findViewById(R.id.btnChairArc)
+
+        chairButtons = listOf(btnChairRound, btnChairTop, btnChairSimple, btnChairPerson, btnChairArc)
     }
 
     private fun setupData() {
@@ -89,7 +107,7 @@ class EditTableDialog(
         }
 
         // Set current capacity
-        currentCapacity = table.capacity
+        currentCapacity = table.capacity.coerceIn(1, 9)
         updateCapacityDisplay()
 
         // Set current size
@@ -98,6 +116,10 @@ class EditTableDialog(
             table.width >= sizeLarge.first -> rbLarge.isChecked = true
             else -> rbMedium.isChecked = true
         }
+
+        // Set current chair style
+        currentChairStyle = table.chairStyle.coerceIn(0, 4)
+        updateChairStyleSelection()
     }
 
     private fun setupListeners() {
@@ -112,11 +134,18 @@ class EditTableDialog(
         }
 
         btnCapacityPlus.setOnClickListener {
-            if (currentCapacity < 20) {
+            if (currentCapacity < 9) {  // Max 9 chairs
                 currentCapacity++
                 updateCapacityDisplay()
             }
         }
+
+        // Chair style selection listeners
+        btnChairRound.setOnClickListener { selectChairStyle(0) }
+        btnChairTop.setOnClickListener { selectChairStyle(1) }
+        btnChairSimple.setOnClickListener { selectChairStyle(2) }
+        btnChairPerson.setOnClickListener { selectChairStyle(3) }
+        btnChairArc.setOnClickListener { selectChairStyle(4) }
 
         btnSave.setOnClickListener {
             val isOval = rbOval.isChecked
@@ -126,8 +155,19 @@ class EditTableDialog(
                 else -> sizeMedium
             }
 
-            onSave(isOval, currentCapacity, width, height)
+            onSave(isOval, currentCapacity, width, height, currentChairStyle)
             dismiss()
+        }
+    }
+
+    private fun selectChairStyle(style: Int) {
+        currentChairStyle = style
+        updateChairStyleSelection()
+    }
+
+    private fun updateChairStyleSelection() {
+        chairButtons.forEachIndexed { index, button ->
+            button.isSelected = (index == currentChairStyle)
         }
     }
 

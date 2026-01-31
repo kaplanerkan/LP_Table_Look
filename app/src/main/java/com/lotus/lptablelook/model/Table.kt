@@ -22,5 +22,6 @@ data class Table(
     val platformId: Int = 1,
     var waiterName: String = "",
     var colorCode: Int = 0,  // 0=green, 1=orange, 2=blue
-    var isOval: Boolean = false  // true=oval, false=rectangle
+    var isOval: Boolean = false,  // true=oval, false=rectangle
+    var chairStyle: Int = 0  // 0=round, 1=top, 2=simple, 3=person, 4=arc
 )
