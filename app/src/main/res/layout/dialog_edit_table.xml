@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="32dp"
+    android:layout_margin="24dp"
+    android:minWidth="400dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp">
 
@@ -71,7 +72,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="24dp"
+                android:paddingVertical="8dp">
 
                 <RadioButton
                     android:id="@+id/rbRectangle"
@@ -79,6 +81,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Rechteck"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp"
                     android:checked="true" />
 
                 <RadioButton
@@ -86,7 +90,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Oval" />
+                    android:text="Oval"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
 
             </RadioGroup>
 
@@ -149,14 +155,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="24dp"
+                android:paddingVertical="8dp">
 
                 <RadioButton
                     android:id="@+id/rbSmall"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Klein" />
+                    android:text="Klein"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
 
                 <RadioButton
                     android:id="@+id/rbMedium"
@@ -164,6 +173,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Mittel"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp"
                     android:checked="true" />
 
                 <RadioButton
@@ -171,7 +182,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Groß" />
+                    android:text="Groß"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
 
             </RadioGroup>
 
