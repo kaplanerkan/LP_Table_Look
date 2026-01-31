@@ -11,6 +11,13 @@ Eine Android-Anwendung zur Visualisierung und Verwaltung von Restauranttischen. 
   - Orange/Blau: Verschiedene Belegungszustände
 - **Plattform-Tabs**: Verschiedene Bereiche (z.B. Hauptraum, Terrasse, VIP) als separate Tabs
 - **Bearbeitungsmodus**: Tische per Drag & Drop neu positionieren
+  - Aktivierung über den Edit-Schalter in der oberen Leiste
+  - Gepunktetes Raster zur besseren Ausrichtung
+  - Tische können durch Ziehen verschoben werden
+  - Automatisches Einrasten am Raster (Grid-Snapping)
+  - Ausgewählter Tisch wird mit farbigem Rahmen hervorgehoben
+  - Positionen werden automatisch in der Datenbank gespeichert
+  - Banner-Hinweis zeigt aktiven Bearbeitungsmodus an
 - **Skalierung**: Zoom-Funktion für die Tischansicht
 
 ### Bestellungen
