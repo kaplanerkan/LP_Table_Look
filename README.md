@@ -128,7 +128,9 @@ Die App verwendet folgende Befehle:
 
 ## Lizenz
 
-Proprietär - Lotus Software
+Dieses Projekt ist unter der [GNU General Public License v3.0](LICENSE) lizenziert.
+
+Sie können diese Software frei verwenden, modifizieren und verbreiten, solange alle abgeleiteten Werke ebenfalls unter der GPL-3.0 lizenziert werden.
 
 ## Autor
 
