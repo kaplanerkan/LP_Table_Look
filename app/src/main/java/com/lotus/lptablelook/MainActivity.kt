@@ -20,7 +20,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.WindowCompat
@@ -32,6 +31,7 @@ import com.lotus.lptablelook.model.FIXED_PORT
 import com.lotus.lptablelook.model.Platform
 import com.lotus.lptablelook.network.SyncService
 import com.lotus.lptablelook.ui.EditTableDialog
+import com.lotus.lptablelook.ui.PopupMessage
 import com.lotus.lptablelook.ui.ProgressDialog
 import com.lotus.lptablelook.ui.TableDetailsDialog
 import com.lotus.lptablelook.ui.TableOrdersDialog
@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (currentSocketIp.isEmpty()) {
-                Toast.makeText(this@MainActivity, "Bitte zuerst Server IP konfigurieren", Toast.LENGTH_SHORT).show()
+                PopupMessage.warning(this@MainActivity, "Bitte zuerst Server IP konfigurieren").show()
                 return@launch
             }
 
@@ -214,15 +214,15 @@ class MainActivity : AppCompatActivity() {
                         platform.tables.addAll(tables)
                         tableFloorView.setTables(platform.tables)
                     }
-                    Toast.makeText(this@MainActivity, "Tischstatus aktualisiert", Toast.LENGTH_SHORT).show()
+                    PopupMessage.success(this@MainActivity, "Tischstatus aktualisiert").show()
                 }
                 is SyncService.SyncResult.Error -> {
                     progressDialog.dismiss()
-                    Toast.makeText(this@MainActivity, "Fehler: ${result.message}", Toast.LENGTH_SHORT).show()
+                    PopupMessage.error(this@MainActivity, "Fehler: ${result.message}").show()
                 }
                 is SyncService.SyncResult.NoConnection -> {
                     progressDialog.dismiss()
-                    Toast.makeText(this@MainActivity, "Keine WiFi-Verbindung", Toast.LENGTH_SHORT).show()
+                    PopupMessage.error(this@MainActivity, "Keine WiFi-Verbindung").show()
                 }
             }
         }
@@ -393,7 +393,7 @@ class MainActivity : AppCompatActivity() {
                 repository.updateTableAppearance(table.id, isOval, capacity, width, height)
             }
 
-            Toast.makeText(this, "Tisch wurde aktualisiert", Toast.LENGTH_SHORT).show()
+            PopupMessage.success(this, "Tisch wurde aktualisiert").show()
         }.show()
     }
 
@@ -415,10 +415,9 @@ class MainActivity : AppCompatActivity() {
                     repository.updateTableOccupied(clickedTable.id, clickedTable.isOccupied)
                 }
 
-                Toast.makeText(
+                PopupMessage.info(
                     this,
-                    if (clickedTable.isOccupied) "Tisch als besetzt markiert" else "Tisch als frei markiert",
-                    Toast.LENGTH_SHORT
+                    if (clickedTable.isOccupied) "Tisch als besetzt markiert" else "Tisch als frei markiert"
                 ).show()
             }
             .setOnDetailsListener { clickedTable ->
@@ -429,7 +428,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTableOrders(table: com.lotus.lptablelook.model.Table) {
         if (currentSocketIp.isEmpty()) {
-            Toast.makeText(this, "Bitte zuerst Server IP konfigurieren", Toast.LENGTH_SHORT).show()
+            PopupMessage.warning(this, "Bitte zuerst Server IP konfigurieren").show()
             return
         }
 
@@ -445,20 +444,12 @@ class MainActivity : AppCompatActivity() {
             when (connectionResult) {
                 is SyncService.SyncResult.NoConnection -> {
                     progressDialog.dismiss()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Keine WLAN-Verbindung vorhanden",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    PopupMessage.error(this@MainActivity, "Keine WLAN-Verbindung vorhanden").show()
                     return@launch
                 }
                 is SyncService.SyncResult.Error -> {
                     progressDialog.dismiss()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Kasse ist derzeit nicht erreichbar",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    PopupMessage.error(this@MainActivity, "Kasse ist derzeit nicht erreichbar").show()
                     return@launch
                 }
                 is SyncService.SyncResult.Success -> {
@@ -475,11 +466,7 @@ class MainActivity : AppCompatActivity() {
 
             // Check if orders request failed
             if (ordersResult.isFailure) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Bestellungen konnten nicht geladen werden",
-                    Toast.LENGTH_LONG
-                ).show()
+                PopupMessage.error(this@MainActivity, "Bestellungen konnten nicht geladen werden").show()
                 return@launch
             }
 

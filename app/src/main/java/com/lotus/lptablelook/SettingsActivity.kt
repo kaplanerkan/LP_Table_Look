@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import com.lotus.lptablelook.ui.PopupMessage
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
@@ -154,7 +154,7 @@ class SettingsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repository.saveSettings(settings)
             Log.d("SettingsActivity", "saveSettings - saved successfully")
-            Toast.makeText(this@SettingsActivity, "Einstellungen gespeichert", Toast.LENGTH_SHORT).show()
+            PopupMessage.success(this@SettingsActivity, "Einstellungen gespeichert").show()
             finish()
         }
     }
@@ -240,11 +240,7 @@ class SettingsActivity : AppCompatActivity() {
                     showStatus("Synchronisierung erfolgreich!", true)
                     // Save IP to Room on successful sync
                     saveConnectionSettings(ip)
-                    Toast.makeText(
-                        this@SettingsActivity,
-                        "Daten wurden aktualisiert",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    PopupMessage.success(this@SettingsActivity, "Daten wurden aktualisiert").show()
                 }
                 is SyncService.SyncResult.Error -> {
                     showStatus("Fehler: ${result.message}", false)
