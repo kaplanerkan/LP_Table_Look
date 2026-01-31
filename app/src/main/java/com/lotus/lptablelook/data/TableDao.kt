@@ -50,4 +50,7 @@ interface TableDao {
 
     @Query("UPDATE tables SET isOccupied = :occupied, waiterName = :waiterName, colorCode = :colorCode WHERE id = :tableId")
     suspend fun updateTableStatus(tableId: Int, occupied: Boolean, waiterName: String, colorCode: Int)
+
+    @Query("UPDATE tables SET isOval = :isOval, capacity = :capacity, width = :width, height = :height WHERE id = :tableId")
+    suspend fun updateTableAppearance(tableId: Int, isOval: Boolean, capacity: Int, width: Float, height: Float)
 }

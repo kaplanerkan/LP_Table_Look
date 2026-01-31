@@ -31,6 +31,7 @@ import com.lotus.lptablelook.data.TableRepository
 import com.lotus.lptablelook.model.FIXED_PORT
 import com.lotus.lptablelook.model.Platform
 import com.lotus.lptablelook.network.SyncService
+import com.lotus.lptablelook.ui.EditTableDialog
 import com.lotus.lptablelook.ui.ProgressDialog
 import com.lotus.lptablelook.ui.TableDetailsDialog
 import com.lotus.lptablelook.ui.TableOrdersDialog
@@ -367,6 +368,33 @@ class MainActivity : AppCompatActivity() {
                 repository.updateTablePosition(table.id, table.positionX, table.positionY)
             }
         }
+
+        tableFloorView.onTableLongClicked = { table ->
+            // Show edit dialog only in edit mode
+            if (tableFloorView.isEditModeEnabled()) {
+                showEditTableDialog(table)
+            }
+        }
+    }
+
+    private fun showEditTableDialog(table: com.lotus.lptablelook.model.Table) {
+        EditTableDialog(this, table) { isOval, capacity, width, height ->
+            // Update table properties
+            table.isOval = isOval
+            table.capacity = capacity
+            table.width = width
+            table.height = height
+
+            // Refresh view
+            tableFloorView.invalidate()
+
+            // Save to database
+            lifecycleScope.launch {
+                repository.updateTableAppearance(table.id, isOval, capacity, width, height)
+            }
+
+            Toast.makeText(this, "Tisch wurde aktualisiert", Toast.LENGTH_SHORT).show()
+        }.show()
     }
 
     private fun onTableClicked(table: com.lotus.lptablelook.model.Table) {

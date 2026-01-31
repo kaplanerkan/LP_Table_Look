@@ -58,6 +58,9 @@ class TableRepository(private val database: AppDatabase) {
     suspend fun updateTableStatus(tableId: Int, occupied: Boolean, waiterName: String, colorCode: Int) =
         tableDao.updateTableStatus(tableId, occupied, waiterName, colorCode)
 
+    suspend fun updateTableAppearance(tableId: Int, isOval: Boolean, capacity: Int, width: Float, height: Float) =
+        tableDao.updateTableAppearance(tableId, isOval, capacity, width, height)
+
     // Initialize default data
     suspend fun initializeDefaultData() {
         if (getPlatformCount() == 0) {

@@ -3,6 +3,8 @@ package com.lotus.lptablelook.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -79,6 +81,16 @@ class TableFloorView(
 
     var onTablePositionChanged: ((Table) -> Unit)? = null
     var onTableClicked: ((Table) -> Unit)? = null
+    var onTableLongClicked: ((Table) -> Unit)? = null
+
+    // Long click detection
+    private val longClickHandler = Handler(Looper.getMainLooper())
+    private var longClickRunnable: Runnable? = null
+    private var isLongClickTriggered = false
+    private var touchStartX = 0f
+    private var touchStartY = 0f
+    private val longClickTimeout = 500L // 500ms for long click
+    private val touchSlop = 20f // Movement threshold to cancel long click
 
     fun setTables(tableList: List<Table>) {
         tables.clear()
@@ -201,13 +213,24 @@ class TableFloorView(
 
         drawChairs(canvas, table, tableRect)
 
-        val cornerRadius = 12f * tableScale
-        canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, tablePaint)
-
-        if (isEditMode && selectedTable == table) {
-            canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, selectedBorderPaint)
+        // Draw table shape based on isOval flag
+        if (table.isOval) {
+            // Draw oval/ellipse
+            canvas.drawOval(tableRect, tablePaint)
+            if (isEditMode && selectedTable == table) {
+                canvas.drawOval(tableRect, selectedBorderPaint)
+            } else {
+                canvas.drawOval(tableRect, tableBorderPaint)
+            }
         } else {
-            canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, tableBorderPaint)
+            // Draw rounded rectangle
+            val cornerRadius = 12f * tableScale
+            canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, tablePaint)
+            if (isEditMode && selectedTable == table) {
+                canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, selectedBorderPaint)
+            } else {
+                canvas.drawRoundRect(tableRect, cornerRadius, cornerRadius, tableBorderPaint)
+            }
         }
 
         // Draw table name (use name if available, otherwise number)
@@ -275,9 +298,23 @@ class TableFloorView(
                 Log.d(TAG, "ACTION_DOWN: touchedTable=${touchedTable?.name ?: "null"}")
                 if (touchedTable != null) {
                     selectedTable = touchedTable
+                    touchStartX = x
+                    touchStartY = y
+                    isLongClickTriggered = false
+
+                    // Start long click detection only in edit mode
                     if (isEditMode) {
                         dragOffsetX = x - touchedTable.positionX
                         dragOffsetY = y - touchedTable.positionY
+
+                        longClickRunnable = Runnable {
+                            if (selectedTable != null && !isLongClickTriggered) {
+                                isLongClickTriggered = true
+                                Log.d(TAG, "Long click triggered for ${selectedTable?.name}")
+                                onTableLongClicked?.invoke(selectedTable!!)
+                            }
+                        }
+                        longClickHandler.postDelayed(longClickRunnable!!, longClickTimeout)
                         invalidate()
                     }
                     return true
@@ -286,37 +323,66 @@ class TableFloorView(
 
             MotionEvent.ACTION_MOVE -> {
                 if (isEditMode && selectedTable != null) {
-                    val table = selectedTable ?: return false
-                    val newX = (x - dragOffsetX).coerceIn(0f, width - table.width * tableScale)
-                    val newY = (y - dragOffsetY).coerceIn(0f, height - table.height * tableScale)
-                    table.positionX = newX
-                    table.positionY = newY
-                    invalidate()
+                    // Check if moved beyond threshold - cancel long click
+                    val dx = Math.abs(x - touchStartX)
+                    val dy = Math.abs(y - touchStartY)
+                    if (dx > touchSlop || dy > touchSlop) {
+                        cancelLongClick()
+                    }
+
+                    // Only drag if long click wasn't triggered
+                    if (!isLongClickTriggered) {
+                        val table = selectedTable ?: return false
+                        val newX = (x - dragOffsetX).coerceIn(0f, width - table.width * tableScale)
+                        val newY = (y - dragOffsetY).coerceIn(0f, height - table.height * tableScale)
+                        table.positionX = newX
+                        table.positionY = newY
+                        invalidate()
+                    }
                     return true
                 }
             }
 
             MotionEvent.ACTION_UP -> {
-                Log.d(TAG, "ACTION_UP: selectedTable=${selectedTable?.name ?: "null"}")
-                selectedTable?.let { table ->
-                    if (isEditMode) {
-                        val gridSize = 25f * tableScale
-                        table.positionX = (table.positionX / gridSize).toInt() * gridSize
-                        table.positionY = (table.positionY / gridSize).toInt() * gridSize
-                        onTablePositionChanged?.invoke(table)
-                        Log.d(TAG, "Edit mode: position changed for ${table.name}")
-                    } else {
-                        Log.d(TAG, "Normal mode: invoking onTableClicked for ${table.name}")
-                        onTableClicked?.invoke(table)
+                cancelLongClick()
+                Log.d(TAG, "ACTION_UP: selectedTable=${selectedTable?.name ?: "null"}, longClickTriggered=$isLongClickTriggered")
+
+                // Don't process normal click/drag if long click was triggered
+                if (!isLongClickTriggered) {
+                    selectedTable?.let { table ->
+                        if (isEditMode) {
+                            val gridSize = 25f * tableScale
+                            table.positionX = (table.positionX / gridSize).toInt() * gridSize
+                            table.positionY = (table.positionY / gridSize).toInt() * gridSize
+                            onTablePositionChanged?.invoke(table)
+                            Log.d(TAG, "Edit mode: position changed for ${table.name}")
+                        } else {
+                            Log.d(TAG, "Normal mode: invoking onTableClicked for ${table.name}")
+                            onTableClicked?.invoke(table)
+                        }
+                        invalidate()
                     }
-                    invalidate()
                 }
                 selectedTable = null
+                isLongClickTriggered = false
                 return true
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                cancelLongClick()
+                selectedTable = null
+                isLongClickTriggered = false
             }
         }
 
         return super.onTouchEvent(event)
+    }
+
+    private fun cancelLongClick() {
+        longClickRunnable?.let {
+            longClickHandler.removeCallbacks(it)
+        }
+        longClickRunnable = null
     }
 
     companion object {

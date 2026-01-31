@@ -10,7 +10,7 @@ import com.lotus.lptablelook.model.Table
 
 @Database(
     entities = [Platform::class, Table::class, Settings::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
