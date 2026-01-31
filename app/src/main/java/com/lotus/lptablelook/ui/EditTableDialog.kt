@@ -48,9 +48,9 @@ class EditTableDialog(
 
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        // Set dialog width to 90% of screen width
+        // Set dialog width to 70% of screen width
         window?.setLayout(
-            (context.resources.displayMetrics.widthPixels * 0.85).toInt(),
+            (context.resources.displayMetrics.widthPixels * 0.70).toInt(),
             android.view.WindowManager.LayoutParams.WRAP_CONTENT
         )
 
