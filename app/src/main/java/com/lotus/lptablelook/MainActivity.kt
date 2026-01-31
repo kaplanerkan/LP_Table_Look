@@ -275,13 +275,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createTabView(platform: Platform): TextView {
+        val tabTextSize = resources.getDimension(R.dimen.platform_tab_text_size) / resources.displayMetrics.scaledDensity
+        val tabPaddingH = resources.getDimensionPixelSize(R.dimen.platform_tab_padding_horizontal)
+        val tabPaddingV = resources.getDimensionPixelSize(R.dimen.platform_tab_padding_vertical)
+
         return TextView(this).apply {
             text = platform.name
-            textSize = 20f
+            textSize = tabTextSize
             setTextColor(getColor(R.color.tab_text))
             setTypeface(typeface, android.graphics.Typeface.BOLD)
             gravity = Gravity.CENTER
-            setPadding(56, 16, 56, 16)
+            setPadding(tabPaddingH, tabPaddingV, tabPaddingH, tabPaddingV)
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

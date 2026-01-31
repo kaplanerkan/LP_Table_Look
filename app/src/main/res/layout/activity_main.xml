@@ -47,8 +47,8 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="8dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="@dimen/header_padding_start"
+            android:paddingEnd="@dimen/header_padding_end"
             android:background="@color/primary_dark">
 
             <!-- Digital Clock -->
@@ -59,42 +59,42 @@
                 android:format24Hour="HH:mm"
                 android:format12Hour="HH:mm"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="@dimen/clock_text_size"
                 android:textStyle="bold"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginEnd="@dimen/clock_margin_end" />
 
             <!-- Refresh Tables -->
             <ImageButton
                 android:id="@+id/btnRefresh"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/header_button_size"
+                android:layout_height="@dimen/header_button_size"
                 android:src="@android:drawable/ic_menu_rotate"
                 android:background="@drawable/oval_button_background"
                 android:contentDescription="Refresh"
-                android:padding="12dp"
-                android:layout_marginEnd="12dp"/>
+                android:padding="@dimen/header_button_padding"
+                android:layout_marginEnd="@dimen/header_button_margin"/>
 
             <!-- Scale Down -->
             <ImageButton
                 android:id="@+id/btnScaleDown"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/header_button_size"
+                android:layout_height="@dimen/header_button_size"
                 android:src="@android:drawable/btn_minus"
                 android:background="@drawable/oval_button_background"
                 android:contentDescription="Scale down"
-                android:padding="12dp"
-                android:layout_marginEnd="8dp"/>
+                android:padding="@dimen/header_button_padding"
+                android:layout_marginEnd="6dp"/>
 
             <!-- Scale Up -->
             <ImageButton
                 android:id="@+id/btnScaleUp"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/header_button_size"
+                android:layout_height="@dimen/header_button_size"
                 android:src="@android:drawable/btn_plus"
                 android:background="@drawable/oval_button_background"
                 android:contentDescription="Scale up"
-                android:padding="12dp"
-                android:layout_marginEnd="16dp"/>
+                android:padding="@dimen/header_button_padding"
+                android:layout_marginEnd="@dimen/header_button_margin"/>
 
             <!-- Edit Mode Toggle -->
             <androidx.appcompat.widget.SwitchCompat
@@ -103,27 +103,28 @@
                 android:layout_height="wrap_content"
                 android:text="Edit"
                 android:textColor="@color/white"
+                android:textSize="@dimen/edit_switch_text_size"
                 app:thumbTint="@color/accent"
                 app:trackTint="@color/primary_light"
-                android:minHeight="48dp"
-                android:layout_marginEnd="16dp"/>
+                android:minHeight="@dimen/edit_switch_min_height"
+                android:layout_marginEnd="@dimen/edit_switch_margin_end"/>
 
             <!-- Settings Button -->
             <ImageButton
                 android:id="@+id/btnSettings"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/header_button_size"
+                android:layout_height="@dimen/header_button_size"
                 android:src="@android:drawable/ic_menu_preferences"
                 android:background="@drawable/oval_button_background"
                 android:contentDescription="Settings"
-                android:padding="12dp"
-                android:layout_marginEnd="16dp" />
+                android:padding="@dimen/header_button_padding"
+                android:layout_marginEnd="@dimen/header_button_margin" />
 
             <!-- WiFi Status Icon -->
             <ImageView
                 android:id="@+id/ivWifiStatus"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/wifi_icon_size"
+                android:layout_height="@dimen/wifi_icon_size"
                 android:src="@drawable/ic_wifi_4"
                 android:contentDescription="WiFi Status" />
 

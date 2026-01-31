@@ -25,6 +25,9 @@ class TableFloorView(
     var tableScale: Float = 1.0f
         set(value) {
             field = value
+            if (width > 0 && height > 0) {
+                constrainTablePositions()
+            }
             invalidate()
         }
 
@@ -80,7 +83,32 @@ class TableFloorView(
     fun setTables(tableList: List<Table>) {
         tables.clear()
         tables.addAll(tableList)
+        // Constrain table positions within view bounds
+        if (width > 0 && height > 0) {
+            constrainTablePositions()
+        }
         invalidate()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        // When view size changes (e.g., orientation change), constrain tables within bounds
+        if (w > 0 && h > 0 && tables.isNotEmpty()) {
+            constrainTablePositions()
+        }
+    }
+
+    private fun constrainTablePositions() {
+        val chairMargin = 30f * tableScale // Extra margin for chairs
+        for (table in tables) {
+            val scaledWidth = table.width * tableScale
+            val scaledHeight = table.height * tableScale
+            val maxX = (width - scaledWidth - chairMargin).coerceAtLeast(chairMargin)
+            val maxY = (height - scaledHeight - chairMargin).coerceAtLeast(chairMargin)
+
+            table.positionX = table.positionX.coerceIn(chairMargin, maxX)
+            table.positionY = table.positionY.coerceIn(chairMargin, maxY)
+        }
     }
 
     fun getTables(): List<Table> = tables.toList()

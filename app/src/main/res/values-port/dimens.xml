@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Header button sizes - Portrait (smaller) -->
+    <dimen name="header_button_size">36dp</dimen>
+    <dimen name="header_button_padding">8dp</dimen>
+    <dimen name="header_button_margin">6dp</dimen>
+
+    <!-- Clock size -->
+    <dimen name="clock_text_size">18sp</dimen>
+    <dimen name="clock_margin_end">8dp</dimen>
+
+    <!-- WiFi icon -->
+    <dimen name="wifi_icon_size">24dp</dimen>
+
+    <!-- Edit switch -->
+    <dimen name="edit_switch_text_size">11sp</dimen>
+    <dimen name="edit_switch_min_height">36dp</dimen>
+    <dimen name="edit_switch_margin_end">8dp</dimen>
+
+    <!-- Header padding -->
+    <dimen name="header_padding_start">4dp</dimen>
+    <dimen name="header_padding_end">8dp</dimen>
+
+    <!-- Platform tabs -->
+    <dimen name="platform_tab_text_size">16sp</dimen>
+    <dimen name="platform_tab_padding_horizontal">24dp</dimen>
+    <dimen name="platform_tab_padding_vertical">10dp</dimen>
+</resources>

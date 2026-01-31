@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Header button sizes - Landscape (default) -->
+    <dimen name="header_button_size">48dp</dimen>
+    <dimen name="header_button_padding">12dp</dimen>
+    <dimen name="header_button_margin">12dp</dimen>
+
+    <!-- Clock size -->
+    <dimen name="clock_text_size">24sp</dimen>
+    <dimen name="clock_margin_end">16dp</dimen>
+
+    <!-- WiFi icon -->
+    <dimen name="wifi_icon_size">32dp</dimen>
+
+    <!-- Edit switch -->
+    <dimen name="edit_switch_text_size">14sp</dimen>
+    <dimen name="edit_switch_min_height">48dp</dimen>
+    <dimen name="edit_switch_margin_end">16dp</dimen>
+
+    <!-- Header padding -->
+    <dimen name="header_padding_start">8dp</dimen>
+    <dimen name="header_padding_end">16dp</dimen>
+
+    <!-- Platform tabs -->
+    <dimen name="platform_tab_text_size">20sp</dimen>
+    <dimen name="platform_tab_padding_horizontal">56dp</dimen>
+    <dimen name="platform_tab_padding_vertical">16dp</dimen>
+</resources>
