@@ -1,0 +1,28 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Claude settings
+.claude/
+
+# Windows special files
+nul
+NUL
+
+# Mac
+.DS_Store
+*.swp
+*~
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar

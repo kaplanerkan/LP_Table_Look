@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LP Table Look</string>
+    <string name="edit_mode">Edit</string>
+    <string name="edit_mode_banner">EDIT MODE - Masalari surukleyerek pozisyonlarini ayarlayin</string>
+    <string name="table_occupied">Dolu</string>
+    <string name="table_available">Bos</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Restaurant table icon -->
+    <!-- Table top -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M3,10h18v2H3z" />
+    <!-- Left leg -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M5,12h2v8H5z" />
+    <!-- Right leg -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,12h2v8h-2z" />
+    <!-- Plate left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M6,6m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <!-- Plate right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,6m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <!-- Center decoration -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,5h2v5h-2z" />
+</vector>

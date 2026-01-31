@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Euro/Cash icon -->
+    <!-- Outer circle -->
+    <path
+        android:fillColor="#2C3E50"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8s3.59,-8 8,-8 8,3.59 8,8 -3.59,8 -8,8z" />
+    <!-- Euro symbol -->
+    <path
+        android:fillColor="#2C3E50"
+        android:pathData="M15,8.5c-0.83,-1.11 -2.15,-1.75 -3.5,-1.75 -2.21,0 -4,1.79 -4,4v0.5H6v1.5h1.5v0.5c0,2.21 1.79,4 4,4 1.35,0 2.67,-0.64 3.5,-1.75l-1.5,-1c-0.5,0.67 -1.22,1 -2,1 -1.21,0 -2.2,-0.85 -2.45,-2H13v-1.5H9v-0.5c0,-0.28 0.05,-0.55 0.12,-0.8H13V9.5H9.55c0.4,-0.86 1.24,-1.25 2,-1.25 0.78,0 1.5,0.33 2,1l1.45,-0.75z" />
+</vector>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_main"
+    tools:context=".MainActivity">
+
+    <!-- Ust Kisim: %10 - Platform Tabs + Edit Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:background="@color/background_header">
+
+        <!-- Abteilung Scroll Area -->
+        <HorizontalScrollView
+            android:id="@+id/platformScrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/platformContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <!-- Abteilung tabs buraya dinamik eklenecek -->
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <!-- Sag taraf: Clock + Controls + WiFi Status -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:background="@color/primary_dark">
+
+            <!-- Digital Clock -->
+            <TextClock
+                android:id="@+id/digitalClock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:format24Hour="HH:mm"
+                android:format12Hour="HH:mm"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Refresh Tables -->
+            <ImageButton
+                android:id="@+id/btnRefresh"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_rotate"
+                android:background="@drawable/oval_button_background"
+                android:contentDescription="Refresh"
+                android:padding="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <!-- Scale Down -->
+            <ImageButton
+                android:id="@+id/btnScaleDown"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/btn_minus"
+                android:background="@drawable/oval_button_background"
+                android:contentDescription="Scale down"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Scale Up -->
+            <ImageButton
+                android:id="@+id/btnScaleUp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/btn_plus"
+                android:background="@drawable/oval_button_background"
+                android:contentDescription="Scale up"
+                android:padding="12dp"
+                android:layout_marginEnd="16dp"/>
+
+            <!-- Edit Mode Toggle -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEditMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textColor="@color/white"
+                app:thumbTint="@color/accent"
+                app:trackTint="@color/primary_light"
+                android:minHeight="48dp"
+                android:layout_marginEnd="16dp"/>
+
+            <!-- Settings Button -->
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_preferences"
+                android:background="@drawable/oval_button_background"
+                android:contentDescription="Settings"
+                android:padding="12dp"
+                android:layout_marginEnd="16dp" />
+
+            <!-- WiFi Status Icon -->
+            <ImageView
+                android:id="@+id/ivWifiStatus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_wifi_4"
+                android:contentDescription="WiFi Status" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Alt Kisim: %90 - Table Floor Area -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90">
+
+        <com.lotus.lptablelook.view.TableFloorView
+            android:id="@+id/tableFloorView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_floor"/>
+
+        <!-- Edit Mode Info Banner -->
+        <TextView
+            android:id="@+id/editModeBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="EDIT MODE - Masalari surukleyerek pozisyonlarini ayarlayin"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:background="@color/edit_mode_highlight"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</LinearLayout>

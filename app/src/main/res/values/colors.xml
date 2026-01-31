@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Restaurant Theme Colors -->
+    <color name="primary">#2C3E50</color>
+    <color name="primary_dark">#1A252F</color>
+    <color name="primary_light">#34495E</color>
+    <color name="accent">#E67E22</color>
+    <color name="accent_light">#F39C12</color>
+
+    <!-- Background Colors -->
+    <color name="background_main">#ECF0F1</color>
+    <color name="background_floor">#D5DBDB</color>
+    <color name="background_header">#2C3E50</color>
+
+    <!-- Table Colors - iOS Style -->
+    <color name="table_available">#30D158</color>
+    <color name="table_occupied">#FF453A</color>
+    <color name="table_occupied_orange">#FF9F0A</color>
+    <color name="table_occupied_blue">#0A84FF</color>
+    <color name="table_reserved">#FF9F0A</color>
+    <color name="table_border">#1A252F</color>
+    <color name="table_border_available">#2E7D32</color>
+    <color name="table_text">#FFFFFF</color>
+    <color name="table_text_dark">#1C1C1E</color>
+
+    <!-- Abteilung Tab Colors -->
+    <color name="tab_selected">#E67E22</color>
+    <color name="tab_unselected">#34495E</color>
+    <color name="tab_text">#FFFFFF</color>
+
+    <!-- Edit Mode -->
+    <color name="edit_mode_highlight">#3498DB</color>
+    <color name="grid_line">#BDC3C7</color>
+
+    <!-- Turquoise Theme -->
+    <color name="turquoise">#1ABC9C</color>
+    <color name="turquoise_dark">#16A085</color>
+    <color name="turquoise_light">#48C9B0</color>
+    <color name="turquoise_soft">#A3E4D7</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+
+    <!-- Dialog -->
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="dialog_overlay">#80000000</color>
+</resources>
