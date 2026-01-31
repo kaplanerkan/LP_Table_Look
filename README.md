@@ -107,7 +107,17 @@ Die App verwendet folgende Befehle:
 
 ## Screenshots
 
-Screenshots befinden sich im Ordner `/screenshots`.
+### Tischübersicht
+![Tischübersicht](screenshots/scrcpy_UlooN5gpTP.png)
+
+### Bestellungen Dialog
+![Bestellungen](screenshots/scrcpy_AW3phu3obq.png)
+
+### Einstellungen
+![Einstellungen](screenshots/scrcpy_OOlmmGOl6L.png)
+
+### Verbindungsstatus
+![Verbindung](screenshots/scrcpy_Gp9LJl99PM.png)
 
 ## Lizenz
 
