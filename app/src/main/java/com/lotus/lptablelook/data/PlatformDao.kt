@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.lotus.lptablelook.model.Platform
 import kotlinx.coroutines.flow.Flow
@@ -38,4 +39,29 @@ interface PlatformDao {
 
     @Query("SELECT COUNT(*) FROM platforms")
     suspend fun getCount(): Int
+
+    @Query("UPDATE platforms SET name = :name WHERE id = :id")
+    suspend fun updateName(id: Int, name: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIgnore(platform: Platform): Long
+
+    @Query("DELETE FROM platforms WHERE id NOT IN (:keepIds)")
+    suspend fun deleteNotIn(keepIds: List<Int>)
+
+    /**
+     * Merges the server's platform list into the local one without dropping the
+     * table rows that reference these ids.
+     */
+    @Transaction
+    suspend fun upsertFromServer(serverPlatforms: List<Platform>, deleteMissing: Boolean) {
+        for (platform in serverPlatforms) {
+            if (updateName(platform.id, platform.name) == 0) {
+                insertIgnore(platform)
+            }
+        }
+        if (deleteMissing) {
+            deleteNotIn(serverPlatforms.map { it.id })
+        }
+    }
 }

@@ -361,9 +361,16 @@ class SyncService(
         }
 
         if (platforms.isNotEmpty()) {
-            // Önce tüm platformları sil, sonra yenilerini ekle
-            repository.deleteAllPlatforms()
-            repository.insertPlatforms(platforms)
+            // Merge instead of delete+insert: dropping the platform rows would leave
+            // the tables that reference them orphaned and invisible in every tab.
+            // Only prune locally known platforms when every record could be parsed.
+            val complete = platforms.size == records.size
+            if (!complete) {
+                Log.w(TAG, "parsePlatformsAndSave: ${records.size - platforms.size} record(s) unparsed, skipping prune")
+            }
+            repository.upsertServerPlatforms(platforms, deleteMissing = complete)
+        } else {
+            Log.w(TAG, "parsePlatformsAndSave: no platform parsed, keeping local data")
         }
     }
 
@@ -375,31 +382,22 @@ class SyncService(
         val records = data.split(SocketService.DATA_FINISH)
             .filter { it.isNotBlank() && it != SocketService.DATA_FINISH }
 
-        val tables = records.mapIndexedNotNull { index, record ->
+        val tables = records.mapNotNull { record ->
             try {
                 val fields = record.split(SocketService.DATA_SEPARATOR)
                 if (fields.size >= 3) {
                     // Server format: id;!;pltId;!;masaAdi
-                    val id = fields[0].toIntOrNull() ?: return@mapIndexedNotNull null
+                    val id = fields[0].toIntOrNull() ?: return@mapNotNull null
                     val platformId = fields[1].toIntOrNull() ?: 1
                     val name = fields[2]
 
-                    // Calculate grid position based on index within platform
-                    val columns = 5
-                    val row = index / columns
-                    val col = index % columns
-                    val startX = 80f
-                    val startY = 80f
-                    val spacingX = 180f
-                    val spacingY = 160f
-
+                    // Layout fields stay at their defaults here on purpose: the repository
+                    // keeps the stored position/size/shape for tables we already know and
+                    // only assigns a grid slot to genuinely new ones.
                     Table(
                         id = id,
                         name = name,
                         number = id,
-                        capacity = 4,
-                        positionX = startX + (col * spacingX),
-                        positionY = startY + (row * spacingY),
                         platformId = platformId
                     )
                 } else null
@@ -409,8 +407,16 @@ class SyncService(
         }
 
         if (tables.isNotEmpty()) {
-            repository.deleteAllTables()
-            repository.insertTables(tables)
+            // Merge instead of delete+insert, otherwise every sync would wipe the
+            // drag & drop layout and the per-table appearance the user configured.
+            // Only prune locally known tables when every record could be parsed.
+            val complete = tables.size == records.size
+            if (!complete) {
+                Log.w(TAG, "parseTablesAndSave: ${records.size - tables.size} record(s) unparsed, skipping prune")
+            }
+            repository.upsertServerTables(tables, deleteMissing = complete)
+        } else {
+            Log.w(TAG, "parseTablesAndSave: no table parsed, keeping local data")
         }
     }
 

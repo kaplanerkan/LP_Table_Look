@@ -64,6 +64,40 @@ class TableRepository(private val database: AppDatabase) {
     suspend fun updateTableTotalSum(tableId: Int, totalSum: Double) =
         tableDao.updateTableTotalSum(tableId, totalSum)
 
+    /**
+     * Merges the server's table list into the local DB. Tables we already know keep
+     * their user-defined layout (position, size, shape, chair style, capacity);
+     * newly reported tables are placed on the next free grid slot of their platform.
+     *
+     * [deleteMissing] must only be true when the server response was parsed completely.
+     * A half-parsed response would otherwise delete perfectly valid local tables.
+     */
+    suspend fun upsertServerTables(serverTables: List<Table>, deleteMissing: Boolean = true) {
+        if (serverTables.isEmpty()) return
+
+        val existingIds = tableDao.getAllIds().toSet()
+        val nextSlot = mutableMapOf<Int, Int>()
+
+        val prepared = serverTables.map { table ->
+            if (table.id in existingIds) {
+                table
+            } else {
+                val slot = nextSlot.getOrPut(table.platformId) { tableDao.countByPlatform(table.platformId) }
+                nextSlot[table.platformId] = slot + 1
+                val (x, y) = gridPosition(slot)
+                table.copy(positionX = x, positionY = y)
+            }
+        }
+
+        tableDao.upsertFromServer(prepared, deleteMissing)
+    }
+
+    /** Merges the server's platform list without dropping the tables that reference it. */
+    suspend fun upsertServerPlatforms(serverPlatforms: List<Platform>, deleteMissing: Boolean = true) {
+        if (serverPlatforms.isEmpty()) return
+        platformDao.upsertFromServer(serverPlatforms, deleteMissing)
+    }
+
     suspend fun updateTableAppearance(tableId: Int, isOval: Boolean, capacity: Int, width: Float, height: Float, chairStyle: Int) =
         tableDao.updateTableAppearance(tableId, isOval, capacity, width, height, chairStyle)
 
@@ -96,19 +130,19 @@ class TableRepository(private val database: AppDatabase) {
         }
     }
 
+    private fun gridPosition(slot: Int): Pair<Float, Float> {
+        val row = slot / GRID_COLUMNS
+        val col = slot % GRID_COLUMNS
+        return Pair(GRID_START_X + (col * GRID_SPACING_X), GRID_START_Y + (row * GRID_SPACING_Y))
+    }
+
     private fun generateTables(platformId: Int, startNumber: Int, count: Int): List<Table> {
         val tables = mutableListOf<Table>()
-        val columns = 5
-        val startX = 80f
-        val startY = 80f
-        val spacingX = 180f
-        val spacingY = 160f
 
         for (i in 0 until count) {
-            val row = i / columns
-            val col = i % columns
             val capacity = if (i % 3 == 0) 4 else 2
             val tableNumber = startNumber + i
+            val (x, y) = gridPosition(i)
 
             tables.add(
                 Table(
@@ -116,8 +150,8 @@ class TableRepository(private val database: AppDatabase) {
                     name = "Tisch $tableNumber",
                     number = tableNumber,
                     capacity = capacity,
-                    positionX = startX + (col * spacingX),
-                    positionY = startY + (row * spacingY),
+                    positionX = x,
+                    positionY = y,
                     width = if (capacity == 2) 100f else 140f,
                     height = if (capacity == 2) 80f else 100f,
                     isOccupied = false,
@@ -145,5 +179,13 @@ class TableRepository(private val database: AppDatabase) {
         if (existing == null) {
             saveSettings(Settings())
         }
+    }
+
+    companion object {
+        private const val GRID_COLUMNS = 5
+        private const val GRID_START_X = 80f
+        private const val GRID_START_Y = 80f
+        private const val GRID_SPACING_X = 180f
+        private const val GRID_SPACING_Y = 160f
     }
 }
