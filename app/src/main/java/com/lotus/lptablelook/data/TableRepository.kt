@@ -173,6 +173,9 @@ class TableRepository(private val database: AppDatabase) {
 
     suspend fun updateSocketConfig(ip: String, port: Int) = settingsDao.updateSocketConfig(ip, port)
 
+    /** Keeps the zoom level the user picked on the floor view, so it survives a restart. */
+    suspend fun updateTableScale(scale: Float) = settingsDao.updateTableScale(scale)
+
     suspend fun initializeSettings() {
         val existing = getSettingsSync()
         android.util.Log.d("TableRepository", "initializeSettings - existing: $existing")

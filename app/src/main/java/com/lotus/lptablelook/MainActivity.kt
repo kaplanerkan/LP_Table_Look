@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     private var currentPlatform: Platform? = null
     private var currentScale = 1.0f
     private var currentSocketIp: String = ""
+    private var autoRefreshDone = false
 
     private lateinit var connectivityManager: ConnectivityManager
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
@@ -240,6 +241,9 @@ class MainActivity : AppCompatActivity() {
                 if (currentSocketIp.isNotEmpty()) {
                     syncService.initialize(currentSocketIp, FIXED_PORT)
                 }
+                // Apply the stored zoom level (Settings seekbar / the +- buttons)
+                currentScale = it.tableScaleDefault.coerceIn(MIN_SCALE, MAX_SCALE)
+                tableFloorView.tableScale = currentScale
                 // Set background style
                 tableFloorView.setBackgroundStyle(it.backgroundStyle)
                 // Set show chairs setting
@@ -248,6 +252,13 @@ class MainActivity : AppCompatActivity() {
                 tableFloorView.setShowPrices(it.showPrices)
                 // Set show currency symbol setting
                 tableFloorView.setShowCurrencySymbol(it.showCurrencySymbol)
+
+                // Pull fresh table states once per app start when the user asked for it
+                if (it.autoConnect && !autoRefreshDone && currentSocketIp.isNotEmpty()) {
+                    autoRefreshDone = true
+                    android.util.Log.d("MainActivity", "autoConnect enabled - refreshing table statuses")
+                    doRefreshTables()
+                }
             }
         }
     }
@@ -455,17 +466,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnScaleUp.setOnClickListener {
-            if (currentScale < 2.0f) {
-                currentScale += 0.1f
-                tableFloorView.tableScale = currentScale
-            }
+            applyScale(currentScale + SCALE_STEP)
         }
 
         btnScaleDown.setOnClickListener {
-            if (currentScale > 0.5f) {
-                currentScale -= 0.1f
-                tableFloorView.tableScale = currentScale
-            }
+            applyScale(currentScale - SCALE_STEP)
         }
 
         tableFloorView.onTableClicked = { table ->
@@ -486,6 +491,18 @@ class MainActivity : AppCompatActivity() {
             if (tableFloorView.isEditModeEnabled()) {
                 showEditTableDialog(table)
             }
+        }
+    }
+
+    /** Applies and stores the zoom level so it survives onResume and app restarts. */
+    private fun applyScale(scale: Float) {
+        val clamped = scale.coerceIn(MIN_SCALE, MAX_SCALE)
+        if (clamped == currentScale) return
+
+        currentScale = clamped
+        tableFloorView.tableScale = clamped
+        lifecycleScope.launch {
+            repository.updateTableScale(clamped)
         }
     }
 
@@ -589,5 +606,11 @@ class MainActivity : AppCompatActivity() {
 
             TableOrdersDialog(this@MainActivity, table, orders, totalSum).show()
         }
+    }
+
+    companion object {
+        private const val MIN_SCALE = 0.5f
+        private const val MAX_SCALE = 2.0f
+        private const val SCALE_STEP = 0.1f
     }
 }

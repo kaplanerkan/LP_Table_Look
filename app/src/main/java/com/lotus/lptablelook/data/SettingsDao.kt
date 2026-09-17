@@ -25,4 +25,7 @@ interface SettingsDao {
 
     @Query("UPDATE settings SET socketIp = :ip, socketPort = :port WHERE id = 1")
     suspend fun updateSocketConfig(ip: String, port: Int)
+
+    @Query("UPDATE settings SET tableScaleDefault = :scale WHERE id = 1")
+    suspend fun updateTableScale(scale: Float)
 }
