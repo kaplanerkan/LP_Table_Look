@@ -11,7 +11,7 @@ import com.lotus.lptablelook.model.Table
 @Database(
     entities = [Platform::class, Table::class, Settings::class],
     version = 10,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -30,7 +30,11 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "lptablelook_database"
                 )
-                    .fallbackToDestructiveMigration(dropAllTables = true)
+                    // Destructive fallback is allowed ONLY for the pre-release schemas.
+                    // From version 10 on, a bump without a Migration fails loudly instead
+                    // of silently wiping the table layout, the appearance settings and the
+                    // configured server IP - none of which can be restored from the server.
+                    .fallbackToDestructiveMigrationFrom(true, 1, 2, 3, 4, 5, 6, 7, 8, 9)
                     .build()
                 INSTANCE = instance
                 instance
