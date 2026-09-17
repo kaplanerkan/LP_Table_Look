@@ -571,9 +571,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // Get orders and sum
+            // One CMD 32 round trip carries both the order lines and the total:
+            // asking for the sum separately just repeated the same request.
             val ordersResult = syncService.getTableOrders(table.id)
-            val sumResult = syncService.getTableSum(table.id)
 
             progressDialog.dismiss()
 
@@ -584,19 +584,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val orders = ordersResult.getOrElse { emptyList() }
-            android.util.Log.d("MainActivity", "Orders count: ${orders.size}")
-
-            // Get server sum or calculate from orders
-            val serverSum = sumResult.getOrElse { 0.0 }
-            android.util.Log.d("MainActivity", "Server sum: $serverSum")
-
-            // Calculate sum from orders
-            val calculatedSum = orders.sumOf { it.total - it.discount }
-            android.util.Log.d("MainActivity", "Calculated sum: $calculatedSum")
-
-            // Use calculated sum if server sum is 0 or invalid
-            val totalSum = if (serverSum > 0) serverSum else calculatedSum
-            android.util.Log.d("MainActivity", "Final totalSum: $totalSum")
+            val totalSum = orders.sumOf { it.total - it.discount }
+            android.util.Log.d("MainActivity", "Orders count: ${orders.size}, totalSum: $totalSum")
 
             TableOrdersDialog(this@MainActivity, table, orders, totalSum).show()
         }

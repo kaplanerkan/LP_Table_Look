@@ -8,6 +8,11 @@ import com.lotus.lptablelook.model.Platform
 import com.lotus.lptablelook.model.Table
 import com.lotus.lptablelook.utils.DeviceUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
 class SyncService(
@@ -16,7 +21,22 @@ class SyncService(
 ) {
     companion object {
         private const val TAG = "SyncService"
+
+        /**
+         * Each sum request opens its own TCP connection, so a platform with N occupied
+         * tables used to cost N sequential round trips. They now run in parallel, but
+         * capped: the POS server handles one connection per request and should not be
+         * flooded.
+         */
+        private const val MAX_PARALLEL_SUM_REQUESTS = 4
     }
+
+    private data class TableStatus(
+        val tableId: Int,
+        val isOccupied: Boolean,
+        val waiterName: String,
+        val colorCode: Int
+    )
 
     private var socketService: SocketService? = null
 
@@ -161,37 +181,51 @@ class SyncService(
 
         Log.d(TAG, "Updating status for ${records.size} tables in platform $platformId")
 
-        for (record in records) {
+        val statuses = records.mapNotNull { record ->
             try {
                 val fields = record.split(SocketService.DATA_SEPARATOR)
                 if (fields.size >= 3) {
                     // Format: tableId;!;tableName;!;kid;!;gameNo;!;waiterName;!;colorCode
-                    val tableId = fields[0].toIntOrNull() ?: continue
+                    val tableId = fields[0].toIntOrNull() ?: return@mapNotNull null
                     val kid = fields[2].toIntOrNull() ?: 0
-                    val waiterName = if (fields.size > 4) fields[4] else ""
-                    val colorCode = if (fields.size > 5) fields[5].toIntOrNull() ?: 0 else 0
-
-                    val isOccupied = kid > 0
-                    Log.d(TAG, "Processing table $tableId: kid=$kid, isOccupied=$isOccupied, waiter=$waiterName, color=$colorCode")
-
-                    // Fetch totalSum for occupied tables
-                    var totalSum = 0.0
-                    if (isOccupied) {
-                        Log.d(TAG, "Table $tableId is occupied, fetching totalSum...")
-                        val sumResult = fetchTableSum(tableId)
-                        totalSum = sumResult.getOrElse { 0.0 }
-                        Log.d(TAG, "Fetched sum for table $tableId: $totalSum")
-                    }
-
-                    // Update table status with sum
-                    Log.d(TAG, "Updating table $tableId in database with totalSum=$totalSum")
-                    repository.updateTableStatusWithSum(tableId, isOccupied, waiterName, colorCode, totalSum)
-
-                    Log.d(TAG, "Updated table $tableId: occupied=$isOccupied, waiter=$waiterName, color=$colorCode, sum=$totalSum")
-                }
+                    TableStatus(
+                        tableId = tableId,
+                        isOccupied = kid > 0,
+                        waiterName = if (fields.size > 4) fields[4] else "",
+                        colorCode = if (fields.size > 5) fields[5].toIntOrNull() ?: 0 else 0
+                    )
+                } else null
             } catch (e: Exception) {
                 Log.e(TAG, "Error parsing table record: $record", e)
+                null
             }
+        }
+
+        // Free tables need no network round trip at all.
+        statuses.filterNot { it.isOccupied }.forEach { status ->
+            repository.updateTableStatusWithSum(status.tableId, false, status.waiterName, status.colorCode, 0.0)
+        }
+
+        val occupied = statuses.filter { it.isOccupied }
+        if (occupied.isEmpty()) return
+
+        Log.d(TAG, "Fetching sums for ${occupied.size} occupied tables (max $MAX_PARALLEL_SUM_REQUESTS in parallel)")
+
+        val sums = coroutineScope {
+            val gate = Semaphore(MAX_PARALLEL_SUM_REQUESTS)
+            occupied.map { status ->
+                async {
+                    gate.withPermit {
+                        status.tableId to fetchTableSum(status.tableId).getOrElse { 0.0 }
+                    }
+                }
+            }.awaitAll()
+        }.toMap()
+
+        for (status in occupied) {
+            val totalSum = sums[status.tableId] ?: 0.0
+            repository.updateTableStatusWithSum(status.tableId, true, status.waiterName, status.colorCode, totalSum)
+            Log.d(TAG, "Updated table ${status.tableId}: waiter=${status.waiterName}, color=${status.colorCode}, sum=$totalSum")
         }
     }
 
@@ -504,40 +538,5 @@ class SyncService(
 
         Log.d(TAG, "parseTableOrders: returning ${orders.size} orders")
         return orders
-    }
-
-    /**
-     * Get table sum by calculating from orders (Command 32)
-     * CMD 27 doesn't return sum directly, so we calculate from order items
-     */
-    suspend fun getTableSum(tableId: Int): Result<Double> = withContext(Dispatchers.IO) {
-        if (!NetworkUtils.isWifiConnected(context)) {
-            return@withContext Result.failure(Exception("Keine WiFi-Verbindung"))
-        }
-
-        val socket = socketService ?: return@withContext Result.failure(Exception("Socket nicht initialisiert"))
-
-        val deviceId = getDeviceId()
-        // Use CMD 32 to get orders and calculate sum
-        val message = ServerCommand.CMD_GET_TABLE_ORDERS.toMessage(deviceId, tableId.toString())
-        Log.d(TAG, "Requesting table orders to calculate sum: $message")
-
-        when (val result = socket.sendMessage(message)) {
-            is SocketService.SocketResult.Success -> {
-                Log.d(TAG, "Table orders response length: ${result.data.length}")
-                try {
-                    val orders = parseTableOrders(result.data)
-                    val totalSum = orders.sumOf { it.total - it.discount }
-                    Log.d(TAG, "Calculated table sum: $totalSum (${orders.size} orders)")
-                    Result.success(totalSum)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Table sum calculation error: ${e.message}")
-                    Result.success(0.0)
-                }
-            }
-            is SocketService.SocketResult.Error -> {
-                Result.failure(Exception(result.message))
-            }
-        }
     }
 }
